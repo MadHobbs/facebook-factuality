@@ -1,4 +1,10 @@
 # ML_Project
+
+# requirement: 
+- python2.0
+- packages:  urllib2 ,json,datetime,csv, time
+
+# Files
 - facebook-fact-check.csv
   original dataset
 - posts.py
