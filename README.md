@@ -2,7 +2,7 @@
 
 # requirement: 
 - python2.0
-- packages:  urllib2 ,json,datetime,csv, time
+- packages:  urllib2 ,json,datetime,csv, time,pandas
 
 # Files
 - facebook-fact-check.csv
@@ -12,3 +12,7 @@
 - util.py
   - Reading csv files
   - etc...
+
+# References
+- Facebook Graph API (Post)
+  https://developers.facebook.com/docs/graph-api/reference/v2.12/post

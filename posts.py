@@ -3,6 +3,8 @@ import json
 import datetime
 import csv
 import time
+import numpy as np
+import util
 
 #app_id = "<FILL IN>"
 #app_secret = "<FILL IN>" # DO NOT SHARE WITH ANYONE!
@@ -12,16 +14,9 @@ page_id = "184096565021911"
 #access_token = app_id + "|" + app_secret
 
 # access_token = raw_input("EAAWgv9ZBmhoEBADowdWtYzmvXaNfN54WuPc5hsPUobv3AdxdOThQ5AceTO4klSIsSTeU9udScoHfpY0sbGRBJu2Icgup0ltmlMOHtgaVyA4VUhHSCtMhYSZBxdyJksegoZBzXP4WNQaQH4mZBcEPguGZBVQgIbZAXDUVO4cxVmHo6QxGuBlIZAyWOpDWrwQZCqrWdKGICvUNYgZDZD")
-access_token = "EAACEdEose0cBAPgqRZBGwZA4obfUkSiz1r1mYE9Ds9j4NhY211XshLeFcwxtAoUASXzhdckhBxOTKeFYWU9uOATnunRr06ZAa4AuVwU8VHFoj4giPdpHWNz5s7xv4DJtDGXHr6XIEjqkD4ndpNuH7aZAcgYO1jRjhZAiGaUvskiBZAjSAziYyAdq5hvZANLoZA6ZCyDrz0uUNDgZDZD"
+access_token = "EAACEdEose0cBAGxWZCH4fk5ySSOgZBkIlZC9a6tB18kovy4EuKfSHIzorfNuKMavGHBUoEpZBcvzMcBnT526IqGrRl3yLAP4ITDzxQWN3w3Gu0XPLJbiFrOK1Qfjc97u3u6k1SE9OdVvgDhOukmVymQCVXp38smfciaDGZCvsu8xdfHsIBiyBC8EzwbLm1b8ZB4fyjSUTUFwZDZD"
 
 
-def scrape_page_id(page_list):
-    file = "facebook-fact-check.csv"
-    
-    page_ids = []
-    for page in page_list:
-        page_id = []
-    return page_ids
 
 def request_until_succeed(url):
     req = urllib2.Request(url)
@@ -57,8 +52,27 @@ def getFacebookPageFeedData(page_id, access_token, num_statuses):
     parameters = "&limit=%s&access_token=%s" % (num_statuses, access_token)
     url = base + node + fields + parameters
 
+    # print url
+    # input('aa')
     # retrieve data
     data = json.loads(request_until_succeed(url))
+
+    
+    return data
+
+def getFAcebookPostData(page_id, post_id, access_token,):
+    base = "https://graph.facebook.com/v2.12"
+    node = "/%s_%s" % (page_id, post_id)
+    fields = "/?fields=message,created_time,type,name,id," + \
+            "comments.limit(0).summary(true),shares,reactions" + \
+            ".limit(0).summary(true)"
+    parameters = "&access_token=%s" %  access_token
+    
+    url = base + node + fields + parameters
+    print(url)
+    # retrieve data
+    data = json.loads(request_until_succeed(url))
+
     
     return data
 
@@ -157,7 +171,7 @@ def processFacebookPageFeedStatus(status, access_token):
 
 
 def scrapeFacebookPageFeedStatus(page_id, access_token):
-    with open('%s_facebook_statuses.csv' % page_id, 'wb') as file:
+    with open('facebook_statuses.csv' % page_id, 'wb') as file:
         w = csv.writer(file)
         w.writerow(["status_id", "status_message", "link_name", "status_type",
                     "status_link", "permalink_url", "status_published", "num_reactions", 
@@ -186,7 +200,6 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
                 if num_processed % 100 == 0:
                     print "%s Statuses Processed: %s" % \
                         (num_processed, datetime.datetime.now())
-
             # if there is no next page, we're done.
             if 'paging' in statuses.keys():
                 statuses = json.loads(request_until_succeed(
@@ -200,7 +213,10 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
 
 
 if __name__ == '__main__':
-    scrapeFacebookPageFeedStatus(page_id, access_token)
+    data = getFAcebookPostData(page_id,'1035057923259100',access_token)
+    list_account = util.uniqueAccount()
+    for account in list_account:
+        scrapeFacebookPageFeedStatus(account, access_token)
 
 
 # The CSV can be opened in all major statistical programs. Have fun! :)
