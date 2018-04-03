@@ -7,11 +7,14 @@
 # Files
 - facebook-fact-check.csv
   original dataset
+- facebook_statuses.csv
+  Scraped information about status.
 - posts.py
   This code is to scrape information about the post and creat a csv file
 - util.py
   - Reading csv files
   - etc...
+
 
 # References
 - Facebook Graph API (Post)
