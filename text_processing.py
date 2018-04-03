@@ -58,9 +58,8 @@ def main():
     y_pred = clf.predict(X_test)
 
     print clf.coef_
-    print np.unique(y)
 
-    print metrics.accuracy_score(y_test, y_pred)
+    print metrics.f1_score(y_test, y_pred, average='weighted')
 
 
 if __name__ == "__main__" :
