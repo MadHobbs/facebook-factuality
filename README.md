@@ -1,7 +1,7 @@
 # ML_Project
 
 # requirement: 
-- python2.0
+- python2.x (I ran on 2.7)
 - packages:  urllib2 ,json,datetime,csv, time,pandas
 
 # Files
