@@ -6,8 +6,7 @@ Description : Project Data Exploration
 """
 # python libraries
 import collections
-
-# numpy libraries
+from string import punctuation
 import numpy as np
 import pandas as pd
 
