@@ -9,12 +9,15 @@ import pandas as pd
 import numpy as np
 from string import punctuation
 
+# path_data = "../data/"
+path_data = ""
+
 def read_dataSet():
-    file_name = "facebook-fact-check.csv"
+    file_name = path_data + "facebook-fact-check.csv"
     return pd.read_csv(file_name)
 
 def read_merged():
-    return pd.read_csv("merged.csv")
+    return pd.read_csv(path_data+"merged.csv")
 
 def uniqueAccount():
     data = read_dataSet()
@@ -52,8 +55,8 @@ def clear_rows(column_list,  df):
 ######################################################################
 
 def merge_files():
-    fb_fact_check = pd.read_csv('facebook-fact-check.csv')
-    fb_statuses = pd.read_csv('facebook_statuses.csv')
+    fb_fact_check = pd.read_csv(path_data+'facebook-fact-check.csv')
+    fb_statuses = pd.read_csv(path_data+ 'facebook_statuses.csv')
     fb_statuses['account_id'], fb_statuses['post_id'] = fb_statuses['status_id'].str.split('_', 1).str
 
     fb_fact_check[['account_id', 'post_id']] = fb_fact_check[['account_id', 'post_id']].astype(int)
@@ -62,13 +65,11 @@ def merge_files():
     fb_fact_check = fb_fact_check.merge(fb_statuses, how='inner', left_on=['account_id','post_id'], right_on = ['account_id', 'post_id'])
     fb_fact_check.to_csv("merged.csv")
 
-def write_clear()
+def write_clear():
     df = read_merged()
     clear_df = clear_rows(['status_message'], df)
-    clear_df.to_csv('clear.csv')
+    clear_df.to_csv(path_data+'clear.csv')
 
-fb_fact_check = fb_fact_check.merge(fb_statuses, how='inner', left_on=['account_id','post_id'], right_on = ['account_id', 'post_id'])
-fb_fact_check.to_csv("merged.csv")
 
 ######################################################################
 # functions -- feature extraction
@@ -153,4 +154,18 @@ def extract_feature_vectors(df_column, word_list) :
         row += 1
     
     return feature_matrix
+
+
+######################################
+# Load Data -- feature extraction   ##
+######################################
+
+def load_reation_counts(filename):
+    filename = path_data + filename
+    data = pd.read_csv(filename)
+    reaction_list = ['num_reactions' ,'num_comments'  ,'num_shares','num_likes' ,'num_loves' ,'num_wows'  ,'num_hahas' ,'num_sads'  ,'num_angrys']    
+    reactions = data[reaction_list]
+    y = data.Rating
+    X = reactions.values
+    return X, y
 
