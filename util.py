@@ -20,5 +20,3 @@ def postInfo():
             tup = (data.account_id[i], data.post_id[i])
             resultList.append(tup)
     return resultList
-def function():
-    pass
