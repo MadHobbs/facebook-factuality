@@ -59,6 +59,8 @@ def main():
 
     print clf.coef_
 
+    print metrics.accuracy_score(y_test, y_pred, average='weighted')
+    print metrics.f1_score(y_test, y_pred, average='weighted')
     print metrics.f1_score(y_test, y_pred, average='weighted')
 
 
