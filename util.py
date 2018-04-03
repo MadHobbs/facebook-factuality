@@ -62,13 +62,10 @@ def merge_files():
     fb_fact_check = fb_fact_check.merge(fb_statuses, how='inner', left_on=['account_id','post_id'], right_on = ['account_id', 'post_id'])
     fb_fact_check.to_csv("merged.csv")
 
-def write_clear()
+def write_clear():
     df = read_merged()
     clear_df = clear_rows(['status_message'], df)
     clear_df.to_csv('clear.csv')
-
-fb_fact_check = fb_fact_check.merge(fb_statuses, how='inner', left_on=['account_id','post_id'], right_on = ['account_id', 'post_id'])
-fb_fact_check.to_csv("merged.csv")
 
 ######################################################################
 # functions -- feature extraction
@@ -153,4 +150,4 @@ def extract_feature_vectors(df_column, word_list) :
         row += 1
     
     return feature_matrix
-
+    
