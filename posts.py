@@ -14,7 +14,7 @@ page_id = "184096565021911"
 #access_token = app_id + "|" + app_secret
 
 # access_token = raw_input("EAAWgv9ZBmhoEBADowdWtYzmvXaNfN54WuPc5hsPUobv3AdxdOThQ5AceTO4klSIsSTeU9udScoHfpY0sbGRBJu2Icgup0ltmlMOHtgaVyA4VUhHSCtMhYSZBxdyJksegoZBzXP4WNQaQH4mZBcEPguGZBVQgIbZAXDUVO4cxVmHo6QxGuBlIZAyWOpDWrwQZCqrWdKGICvUNYgZDZD")
-access_token = "EAACEdEose0cBAGxWZCH4fk5ySSOgZBkIlZC9a6tB18kovy4EuKfSHIzorfNuKMavGHBUoEpZBcvzMcBnT526IqGrRl3yLAP4ITDzxQWN3w3Gu0XPLJbiFrOK1Qfjc97u3u6k1SE9OdVvgDhOukmVymQCVXp38smfciaDGZCvsu8xdfHsIBiyBC8EzwbLm1b8ZB4fyjSUTUFwZDZD"
+access_token = "EAACEdEose0cBAFHEbg9ro70r5EJTWy1zKRv4U8WV4v5fqZAh3QcdXCFMlFUTEE2w6CNQwsPVNS70VjDWCfpwEDYSfCTheV8yVA0iCT7dCq6ZA4sA1KmS4Di35JpOqSLjZALHxxDpEWE3454L3h6CZBh3N9pgLDo8VwwLk6tZB8btPWB0xhg4sE5AsShU5jBl80r1RJlPwWwZDZD"
 
 
 
@@ -32,6 +32,20 @@ def request_until_succeed(url):
 
             print "Error for URL %s: %s" % (url, datetime.datetime.now())
             print "Retrying."
+
+    return response.read()
+
+def request_or_fail(url):
+    req = urllib2.Request(url)
+    success = False
+    try: 
+        response = urllib2.urlopen(req)
+
+    except Exception, e:
+        print e
+        return None
+        print "Error for URL %s: %s" % (url, datetime.datetime.now())
+        print "Retrying."
 
     return response.read()
 
@@ -55,12 +69,16 @@ def getFacebookPageFeedData(page_id, access_token, num_statuses):
     # print url
     # input('aa')
     # retrieve data
-    data = json.loads(request_until_succeed(url))
-
+    request = request_until_succeed(url)
+    print req
+    if request == None:
+        data = None
+    else:
+        data = json.loads(request_until_succeed(url))
     
     return data
 
-def getFAcebookPostData(page_id, post_id, access_token,):
+def getFacebookPostData(page_id, post_id, access_token,):
     base = "https://graph.facebook.com/v2.12"
     node = "/%s_%s" % (page_id, post_id)
     fields = "/?fields=message,created_time,type,name,id," + \
@@ -69,9 +87,12 @@ def getFAcebookPostData(page_id, post_id, access_token,):
     parameters = "&access_token=%s" %  access_token
     
     url = base + node + fields + parameters
-    print(url)
-    # retrieve data
-    data = json.loads(request_until_succeed(url))
+
+    request = request_or_fail(url)
+    if request == None:
+        data = None
+    else:
+        data = json.loads(request)
 
     
     return data
@@ -210,13 +231,35 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
 
         print "\nDone!\n%s Statuses Processed in %s" % \
                 (num_processed, datetime.datetime.now() - scrape_starttime)
+def scrapeFacebookPostStatus(post_list, access_token):
+    with open('facebook_statuses.csv', 'wb') as file:
+        w = csv.writer(file)
+        w.writerow(["status_id", "status_message", "link_name", "status_type",
+                    "status_link", "permalink_url", "status_published", "num_reactions", 
+                    "num_comments", "num_shares", "num_likes", "num_loves", 
+                    "num_wows", "num_hahas", "num_sads", "num_angrys"])
+
+        print 'scraping...'
+        num_processed = 0
+        list_len = len(post_list)
+        for i in range(list_len):
+            (page_id, post_id) = post_list[i]
+            status = getFacebookPostData(page_id,post_id,access_token)
+             # Ensure it is a status with the expected metadata
+            if status != None:
+                if 'reactions' in status:
+                    num_processed+=1
+                    w.writerow(processFacebookPageFeedStatus(status,
+                        access_token))
+            if i % 100 == 0:
+                num = i / 100
+                print '|' + '#'*num + ' '*(list_len/100 - num) + '|'
+        print "scraped %d posts1" % num_processed
 
 
 if __name__ == '__main__':
-    data = getFAcebookPostData(page_id,'1035057923259100',access_token)
-    list_account = util.uniqueAccount()
-    for account in list_account:
-        scrapeFacebookPageFeedStatus(account, access_token)
+    list_tup = util.postInfo()
+    scrapeFacebookPostStatus(list_tup, access_token)
 
 
 # The CSV can be opened in all major statistical programs. Have fun! :)
