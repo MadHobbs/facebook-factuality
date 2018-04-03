@@ -22,3 +22,16 @@ def postInfo():
     return resultList
 def function():
     pass
+
+######################################################################
+# load data
+######################################################################
+fb_fact_check = pd.read_csv('facebook-fact-check.csv')
+fb_statuses = pd.read_csv('facebook_statuses.csv')
+fb_statuses['account_id'], fb_statuses['post_id'] = fb_statuses['status_id'].str.split('_', 1).str
+
+fb_fact_check[['account_id', 'post_id']] = fb_fact_check[['account_id', 'post_id']].astype(int)
+fb_statuses[['account_id', 'post_id']] = fb_statuses[['account_id', 'post_id']].astype(int)
+
+fb_fact_check = fb_fact_check.merge(fb_statuses, how='inner', left_on=['account_id','post_id'], right_on = ['account_id', 'post_id'])
+fb_fact_check.to_csv("merged.csv")
