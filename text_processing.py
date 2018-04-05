@@ -9,9 +9,8 @@ import collections
 from string import punctuation
 import numpy as np
 import pandas as pd
-from sklearn.svm import SVC
-from sklearn.utils import shuffle
-from sklearn import metrics
+from sklearn.metrics import f1_score, make_scorer
+from sklearn.model_selection import GridSearchCV
 
 # matplotlib libraries
 import matplotlib.pyplot as plt
@@ -43,25 +42,38 @@ def main():
                 print key
 
     X = feature_matrix
+    print X.shape
     y = data.Rating
+    print np.unique(y)
 
     # shuffle data (since file has tweets ordered by movie)
-    X, y = shuffle(X, y, random_state=0)
+    X, y = shuffle(X, y, random_state=42)
     # set random seed
-    np.random.seed(1234)
+    np.random.seed(42)
 
     X_train, X_test = X[:1950], X[1950:]
     y_train, y_test = y[:1950], y[1950:]
 
-    clf = SVC(kernel='linear')
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
+    # define score
+    f1_scorer = make_scorer(f1_score, average='samples')
 
-    print clf.coef_
+    # hyperparameter selection
+    parameters = {'kernel':('linear', 'rbf'), 'C':[10**-3, 10**-2, 10**-1, 1, 10, 10**2, 10**3]}
+    svc = SVC()
+    clf = GridSearchCV(svc, parameters)
+    clf.fit(X, y)
+    #print pd.DataFrame.from_dict(clf.cv_results_)
+    print clf.best_params_
 
-    print metrics.accuracy_score(y_test, y_pred)
-    print metrics.f1_score(y_test, y_pred, average='weighted')
-    print metrics.precision_score(y_test, y_pred, average="weighted")
+    #clf = SVC(kernel='linear')
+    #clf.fit(X_train, y_train)
+    #y_pred = clf.predict(X_test)
+
+    #print clf.coef_
+
+    #print metrics.accuracy_score(y_test, y_pred)
+    #print metrics.f1_score(y_test, y_pred, average='weighted')
+    #print metrics.precision_score(y_test, y_pred, average="weighted")
 
 
 if __name__ == "__main__" :
