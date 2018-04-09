@@ -11,10 +11,13 @@
   Scraped information about status.
 - posts.py
   This code is to scrape information about the post and creat a csv file
+- validations.py
+  Code for validating the classifier. ()
+- bag_of_words.py
+  Code for creating bag of words. 
 - util.py
   - Reading csv files
-  - etc...
-
+  - everything related to data aquisitino (format etc)
 
 # References
 - Facebook Graph API (Post)
