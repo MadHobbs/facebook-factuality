@@ -8,8 +8,7 @@ from sklearn.model_selection import StratifiedKFold
 ####################
 # Cross Validation #
 ####################
-
-def cv_performance(clf, X, y, kf, metric="accuracy") :
+def cv_performance(clf, X, y, kf, metric="accuracy"):
     """
     Splits the data, X and y, into k-folds and runs k-fold cross-validation.
     Trains classifier on k-1 folds and tests on the remaining fold.
@@ -30,7 +29,6 @@ def cv_performance(clf, X, y, kf, metric="accuracy") :
     --------------------
         score   -- float, average cross-validation performance across k folds
     """
-    
     scores = []
     for train, test in kf.split(X, y) :
         X_train, X_test, y_train, y_test = X[train], X[test], y[train], y[test]
@@ -42,8 +40,7 @@ def cv_performance(clf, X, y, kf, metric="accuracy") :
             scores.append(score)
     return np.array(scores).mean()
 
-
-def select_param_linear(X, y, kf, metric="accuracy", plot=True, class_weight = {1:1, -1:1}) :
+    def select_param_linear(X, y, kf, metric="accuracy", plot=True, class_weight = {1:1, -1:1}) :
     """
     Sweeps different settings for the hyperparameter of a linear-kernel SVM,
     calculating the k-fold CV performance for each setting, then selecting the

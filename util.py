@@ -84,7 +84,7 @@ def load_reaction_counts(filename):
     data = pd.read_csv(filename)
     reaction_list = ['num_reactions' ,'num_comments'  ,'num_shares','num_likes' ,'num_loves' ,'num_wows'  ,'num_hahas' ,'num_sads'  ,'num_angrys']    
     reactions = data[reaction_list]
-    y = data.Rating
+    y = data.Rating.values
     X = reactions.values
     return X, y
 

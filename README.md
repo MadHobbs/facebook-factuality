@@ -22,3 +22,19 @@
 # References
 - Facebook Graph API (Post)
   https://developers.facebook.com/docs/graph-api/reference/v2.12/post
+
+# TODO
+- Try high variance/high bias models.
+    - 
+- Know about the dataset balance well. 
+- User Stratified 
+- Frorcus on one message
+- One redommendation -> NLTK can do the natural language processing
+- Use more common feature extractoin -> surpsing words (words that don't show up in other sets)
+- Don't use all of the bags. You could calculate the entropy and use the highest 200 entrpies
+- Stay away from other kinds of prediction
+- Show confusion matrix 
+- Use Normalization 
+- Take a look at the rubic
+- Amount of the insight you get from the model is important
+    - look at the coefficents/ error analysis
