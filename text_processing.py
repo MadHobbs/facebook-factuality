@@ -5,18 +5,18 @@ Date        : 2018 April 2
 Description : Project Data Exploration
 """
 # python libraries
-import collections
-from string import punctuation
 import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score, make_scorer
 from sklearn.model_selection import GridSearchCV
-
-# matplotlib libraries
-import matplotlib.pyplot as plt
+from sklearn.utils import shuffle
+from sklearn.svm import SVC
 
 # libraries specific to project
 from util import *
+from bag_of_words import *
+from validations import *
+from sklearn import metrics
 
 ######################################################################
 # MAIN #
