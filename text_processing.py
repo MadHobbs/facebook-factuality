@@ -32,12 +32,11 @@ def main():
     feature_matrix = extract_feature_vectors(data.status_message, word_list)
     word_totals = feature_matrix.sum(axis=0)
     rank_idx = np.argsort(word_totals)
-    #rank_idx = sorted(range(len(word_totals)), key=lambda i: word_totals[i])
     rank_idx = rank_idx[::-1]
-    print rank_idx[:20]
+    print rank_idx[:200]
 
     for key in word_list.keys():
-        for idx in rank_idx[:20]:
+        for idx in rank_idx[:200]:
             if word_list[key] == idx :
                 print key
 
