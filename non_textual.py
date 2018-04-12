@@ -56,8 +56,9 @@ def main():
     # set random seed
     np.random.seed(42)
 
-    X_train, X_test = X[:1673], X[1673:]
-    y_train, y_test = y[:1673], y[1673:]
+    # run on smaller subset
+    X_train, X_test = X[:836], X[836:1045]
+    y_train, y_test = y[:836], y[836:1045]
 
     # define score
     f1_scorer = make_scorer(f1_score, average='weighted')
@@ -72,6 +73,11 @@ def main():
     print clf.best_params_
     print clf.best_score_
     '''
+
+    # minority class gets larger weight (as per example in class)
+    weight = (1-fracNeg)/float(fracNeg)
+    class_weight = {1:1, -1:weight}
+    print "weight for negatives : " + str((1-fracNeg)/float(fracNeg))
 
     print "SVC with linear kernel, C = 0.1"
 
