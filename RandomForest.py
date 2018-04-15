@@ -8,7 +8,7 @@ Description : Random Forest Tuning and Performance
 import util
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_precision_score
+from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_precision_score, confusion_matrix
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import RandomForestClassifier
 
@@ -66,16 +66,24 @@ def main():
     print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.9958
     preds = rf_f1.predict(X_test)
     print "test f1_score: " + str(f1_score(y_test, preds, average="weighted")) # 0.88877
+    print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, preds))
 
     #print tune(X_train, y_train, 'accuracy')
-    # 3 fold best for accuracy: best is {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 30}
-    #rf_accuracy = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators =  400, max_features = 'sqrt', min_samples_split = 5, max_depth = 30)
-    #rf_accuracy.fit(X_train, y_train)
-    #preds = rf_accuracy.predict(X_train)
-    #print "train accuracy: " + str(accuracy_score(y_train, preds, average="weighted"))
-    #preds = rf_accuracy.predict(X_test)
-    #print "test accuracy: " + str(accuracy_score(y_test, preds, average="weighted"))
+    # 3 fold best for accuracy: best is {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 200, 'max_features': 'sqrt', 'min_samples_split': 2, 'max_depth': 50}
+    rf_accuracy = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators = 200, max_features = 'sqrt', min_samples_split = 2, max_depth = 50)
+    rf_accuracy.fit(X_train, y_train)
+    preds = rf_accuracy.predict(X_train)
+    print "train accuracy: " + str(accuracy_score(y_train, preds)) # 1.0
+    preds = rf_accuracy.predict(X_test)
+    print "test accuracy: " + str(accuracy_score(y_test, preds))
+    print "confusion matrix trained with accuracy: \n" + str(confusion_matrix(y_test, preds)) #0.887
     
-    print tune(X_train, y_train, 'average_precision')
-
-    # accuracy on left, precision on right
+    # print tune(X_train, y_train, 'average_precision')
+    # 3 fold best for precision is {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 800, 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 90}
+    rf_precision = RandomForestClassifier(class_weight=class_weight, bootstrap = False, min_samples_leaf = 1, n_estimators = 800, max_features = 'sqrt', min_samples_split = 5, max_depth = 90)
+    rf_precision.fit(X_train, y_train)
+    preds = rf_precision.predict(X_train)
+    print "train precision: " + str(average_precision_score(y_train, preds)) # 0.9999
+    preds = rf_precision.predict(X_test)
+    print "test precision: " + str(average_precision_score(y_test, preds)) # 0.96h
+    print "confusion matrix trained with precision: \n" + str(confusion_matrix(y_test, preds))
