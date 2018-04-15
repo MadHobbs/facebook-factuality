@@ -43,4 +43,5 @@ def tune(X_train, y_train):
 
 def main():
     X_train, X_test, y_train, y_test = util.make_test_train()
-    print tune(X_train, y_train)
+    # tune(X_train, y_train)
+    # best is {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 30}
