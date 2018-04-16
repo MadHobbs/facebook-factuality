@@ -13,6 +13,8 @@
   This code is to scrape information about the post and creat a csv file
 - validations.py
   Code for validating the classifier. ()
+- ova_processing.py
+  Code for classification of One label vs the rest using svc
 - bag_of_words.py
   Code for creating bag of words. 
 - util.py
