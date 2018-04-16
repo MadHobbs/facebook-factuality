@@ -1,6 +1,9 @@
 # python libraries
 from string import punctuation
 import numpy as np
+from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
+
 
 # matplotlib libraries
 import matplotlib.pyplot as plt
@@ -16,12 +19,24 @@ def extract_words(input_string) :
     
     Returns
     --------------------
-        words        -- list of lowercase "words"
+        filtered_words        -- list of lowercase "words" with 
+                                 stop words and punctuation removed
     """
-    
-    for c in punctuation :
-        input_string = input_string.replace(c, ' ' + c + ' ')
-    return input_string.lower().split()
+    stop_words = set(stopwords.words('english'))
+    tokenizer = RegexpTokenizer(r'\w+')
+    input_string = input_string.lower()
+    words = tokenizer.tokenize(input_string) 
+
+    filtered_words = [w for w in words if not w in stop_words]
+    filtered_words = []
+
+    list_of_crap = ['http', 'ws', 'abcn', 'www', 'com', '2d5ogyb', '2cndgea', 'ly', '2cygp9w', '2d6hx9w', 'de', 'lz', '2ccpesl', '00', 'et', '2cyazvp', '2ck2xe1', '2d2iuqb']
+ 
+    for w in words:
+        if w not in stop_words and len(w) > 1 and w not in list_of_crap:
+            filtered_words.append(w)
+
+    return filtered_words
 
 def extract_dictionary(df_column) :
     """

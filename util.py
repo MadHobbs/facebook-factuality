@@ -2,11 +2,20 @@
 Author      : Shota Yasunaga, Madison Hobbs, Justin Lauw
 Class       : HMC CS 158
 Date        : 2018 April 2
-Description : Project Data Exploration
+Description : Utilities
 """
 
 import pandas as pd
 import numpy as np
+import collections
+from string import punctuation
+from sklearn.svm import SVC
+from sklearn.utils import shuffle
+from sklearn import metrics, preprocessing
+from sklearn.model_selection import KFold
+from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
+
 
 # path_data = "../data/"
 path_data = ""
@@ -65,8 +74,14 @@ def merge_files():
     fb_fact_check.to_csv("merged.csv")
 
 def write_clear():
+    '''Remove rows that are videos and remove rows whose labels are "no factual 
+    content" since the latter are opinion posts (not even trying to be fact.
+    Code Category (news source) as three binary variables (one hot encoding)'''
     df = read_merged()
     clear_df = clear_rows(['status_message'], df)
+    clear_df = clear_df.drop(clear_df[clear_df.Rating == "no factual content"].index)
+    # one hot encode Category
+    clear_df = pd.get_dummies(clear_df, columns=["Category"])
     clear_df.to_csv(path_data+'clear.csv')
 
 
@@ -74,6 +89,149 @@ def write_clear():
 # functions -- feature extraction
 ######################################################################
 
+def extract_words(input_string) :
+    """
+    Processes the input_string, separating it into "words" based on the presence
+    of spaces, and separating punctuation marks into their own words.
+    
+    Parameters
+    --------------------
+        input_string -- string of characters
+    
+    Returns
+    --------------------
+        filtered_words        -- list of lowercase "words" with 
+                                 stop words and punctuation removed
+    """
+    stop_words = set(stopwords.words('english'))
+    tokenizer = RegexpTokenizer(r'\w+')
+    input_string = input_string.lower()
+    words = tokenizer.tokenize(input_string) 
+
+    filtered_words = [w for w in words if not w in stop_words]
+    filtered_words = []
+
+    list_of_crap = ['http', 'ws', 'abcn', 'www', 'com', '2d5ogyb', '2cndgea', 'ly', '2cygp9w', '2d6hx9w', 'de', 'lz', '2ccpesl', '00', 'et', '2cyazvp', '2ck2xe1', '2d2iuqb']
+ 
+    for w in words:
+        if w not in stop_words and len(w) > 1 and w not in list_of_crap:
+            filtered_words.append(w)
+
+    return filtered_words
+
+def extract_dictionary(df_column) :
+    """
+    Given a dataframe, builds a dictionary of unique
+    words/punctuations.
+    
+    Parameters
+    --------------------
+        df_column    -- column of pandas dataframe
+                        (list of strings)
+    
+    Returns
+    --------------------
+        word_list -- dictionary, (key, value) pairs are (word, index)
+    """
+    
+    word_list = {}
+
+    wordsL = []
+    for post in df_column:
+        wordsL.extend(extract_words(post))
+
+    index = 0
+    for word in wordsL :
+        if not word in word_list :
+            word_list[word] = index
+            index += 1
+
+    return word_list
+
+def extract_feature_vectors(df_column, word_list) :
+    """
+    Produces a bag-of-words representation of a text file specified by the
+    filename infile based on the dictionary word_list.
+    
+    Parameters
+    --------------------
+        df_column         -- list of strings, column of dataframe
+        word_list      -- dictionary, (key, value) pairs are (word, index)
+    
+    Returns
+    --------------------
+        feature_matrix -- numpy array of shape (n,d)
+                          boolean (0,1) array indicating word presence in a string
+                            n is the number of non-blank lines in the text file
+                            d is the number of unique words in the text file
+    """
+    
+    num_lines = len(df_column)
+    num_words = len(word_list)
+    feature_matrix = np.zeros((num_lines, num_words))
+    
+    row = 0
+    for post in df_column:
+        postWordsL = extract_words(post)
+        for word in postWordsL:
+            if word in word_list :
+                column = word_list[word]
+                feature_matrix[row][column] = 1
+        row += 1
+    
+    return feature_matrix
+
+
+######################################################################
+# functions -- coding labels and producing train/test data frames    #
+######################################################################
+
+def code_truVrest():
+    '''Code mostly true as 1 and mix of true/false and mostly false as 0.'''
+    data = pd.read_csv('clear.csv')
+    y_truVrest = data.Rating
+    y_truVrest[y_truVrest != 'mostly true'] = 0 #'have false'
+    y_truVrest[y_truVrest == 'mostly true'] = 1  #'mostly true'
+    y_truVrest.reshape(data.Rating.shape)
+    y_truVrest = np.array(y_truVrest, dtype='f')
+    return y_truVrest
+
+def make_BoW_matrix():
+    '''make a matrix of the top 200 words in bag of words'''
+    data = pd.read_csv('clear.csv')
+    word_list = extract_dictionary(data.status_message) 
+    feature_matrix = extract_feature_vectors(data.status_message, word_list)
+    word_totals = feature_matrix.sum(axis=0)
+    rank_idx = np.argsort(word_totals)
+    rank_idx = rank_idx[::-1]
+    top_200_idx = rank_idx[:200]
+    feature_matrix = feature_matrix[:, tuple(top_200_idx)]
+    return feature_matrix
+
+def make_full_X():
+    '''make a feature matrix out of bag of words matrix from 
+    make_BoW_matrix and metadata'''
+    data = pd.read_csv('clear.csv')
+    BoW = make_BoW_matrix()
+    pop_data = data[['num_reactions', 'num_comments', 'num_shares', \
+    'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \
+    'num_angrys', 'Category_left', 'Category_mainstream', 'Category_right']]
+    X = np.hstack((BoW, pop_data))
+    return X
+
+def make_test_train():
+    '''make test and train while preprocessing to normalize
+    return X_train, X_test, y_train, y_test'''
+    y = code_truVrest()
+    X = make_full_X()
+    X, y = shuffle(X, y, random_state=42)
+    X_train, X_test = X[:1673], X[1673:]
+    y_train, y_test = y[:1673], y[1673:]
+    # normalize on training set and then normalize test set 
+    scaler = preprocessing.StandardScaler().fit(X_train)
+    X_train = scaler.transform(X_train) 
+    X_test = scaler.transform(X_test)
+    return X_train, X_test, y_train, y_test
 
 ######################################
 # Load Data -- feature extraction   ##

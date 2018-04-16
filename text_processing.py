@@ -32,12 +32,11 @@ def main():
     feature_matrix = extract_feature_vectors(data.status_message, word_list)
     word_totals = feature_matrix.sum(axis=0)
     rank_idx = np.argsort(word_totals)
-    #rank_idx = sorted(range(len(word_totals)), key=lambda i: word_totals[i])
     rank_idx = rank_idx[::-1]
-    print rank_idx[:20]
+    print rank_idx[:200]
 
     for key in word_list.keys():
-        for idx in rank_idx[:20]:
+        for idx in rank_idx[:200]:
             if word_list[key] == idx :
                 print key
 
@@ -47,7 +46,7 @@ def main():
     print np.unique(y)
 
     # shuffle data (since file has tweets ordered by movie)
-    X, y = shuffle(X, y, random_state=42)
+    X, y = shuffle(X, y, random_state=1234)
     # set random seed
     np.random.seed(42)
 
@@ -57,24 +56,29 @@ def main():
     # define score
     f1_scorer = make_scorer(f1_score, average='samples')
 
-    # hyperparameter selection
+    #hyperparameter selection
+    '''
     parameters = {'kernel':('linear', 'rbf'), 'C':[10**-3, 10**-2, 10**-1, 1, 10, 10**2, 10**3]}
     svc = SVC()
     clf = GridSearchCV(svc, parameters)
     clf.fit(X, y)
-    #print pd.DataFrame.from_dict(clf.cv_results_)
+    print pd.DataFrame.from_dict(clf.cv_results_)
     print clf.best_params_
+    print clf.best_score_
+    '''
 
-    #clf = SVC(kernel='linear')
-    #clf.fit(X_train, y_train)
-    #y_pred = clf.predict(X_test)
+    clf = SVC(kernel='linear', C = 0.1)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
     #print clf.coef_
 
-    #print metrics.accuracy_score(y_test, y_pred)
-    #print metrics.f1_score(y_test, y_pred, average='weighted')
-    #print metrics.precision_score(y_test, y_pred, average="weighted")
+    print metrics.f1_score(y_test, y_pred, average='weighted')
 
+    print "training error"
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_train)
+    print metrics.f1_score(y_train, y_pred, average='weighted')
 
 if __name__ == "__main__" :
     main()
