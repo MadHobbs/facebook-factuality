@@ -18,6 +18,46 @@ from bag_of_words import *
 from validations import *
 from sklearn import metrics
 
+from dtree import *
+
+# libraries for the information gain
+import heapq as hp
+
+###############################
+## Entropy Estimation Stuff ###
+###############################
+def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit = 2):
+    print '-------------------------'
+    n_features = len(X[0])
+    n_classes  = len(np.unique(y))
+    tree = Tree(n_features,n_classes)
+    information_gain_list = np.zeros(len(X[0]))
+
+    for i in range(len(X)):
+        if i %100 == 0:
+            information_gain_list[i] = tree._information_gain(X[:,i],y)[0]
+
+    feature_index = hp.nlargest(500, range(len(information_gain_list)), information_gain_list.take)
+    print feature_index
+    print '---------------y------------------'
+        
+        
+    print '======================================='
+    feature_dic = {}
+    n = 0 
+    for i in feature_index:
+        for key, value in word_list.iteritems():    # for name, age in list.items():  (for Python 3.x)
+            if value == i:
+                if sum(X[:,i]) > num_appear_limit:
+                    n+=1
+                    feature_dic[key] = X[:,i]
+                if n == max_bag:
+                    print 'there are ', n, 'bag of words'
+                    return pd.DataFrame(data=feature_dic)
+    print 'there are ', n, 'bag of words'
+    return pd.DataFrame(data=feature_dic)
+
+
 ######################################################################
 # MAIN #
 ######################################################################
@@ -35,10 +75,10 @@ def main():
     rank_idx = rank_idx[::-1]
     print rank_idx[:200]
 
-    for key in word_list.keys():
-        for idx in rank_idx[:200]:
-            if word_list[key] == idx :
-                print key
+    # for key in word_list.keys():
+    #     for idx in rank_idx[:200]:
+    #         if word_list[key] == idx :
+    #             print key
 
     X = feature_matrix
     print X.shape
@@ -67,18 +107,23 @@ def main():
     print clf.best_score_
     '''
 
-    clf = SVC(kernel='linear', C = 0.1)
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
+    # clf = SVC(kernel='linear', C = 0.1)
+    # clf.fit(X_train, y_train)
+    # y_pred = clf.predict(X_test)
 
-    #print clf.coef_
+    # #print clf.coef_
 
-    print metrics.f1_score(y_test, y_pred, average='weighted')
+    # print metrics.f1_score(y_test, y_pred, average='weighted')
 
-    print "training error"
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_train)
-    print metrics.f1_score(y_train, y_pred, average='weighted')
+    # print "training error"
+    # clf.fit(X_train, y_train)
+    # y_pred = clf.predict(X_train)
+    # print metrics.f1_score(y_train, y_pred, average='weighted')
+
+    pandaman=impWords(X,y,word_list)
+    print pandaman
+
+    
 
 if __name__ == "__main__" :
     main()

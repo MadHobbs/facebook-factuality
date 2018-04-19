@@ -40,7 +40,7 @@ def cv_performance(clf, X, y, kf, metric="accuracy"):
             scores.append(score)
     return np.array(scores).mean()
 
-    def select_param_linear(X, y, kf, metric="accuracy", plot=True, class_weight = {1:1, -1:1}) :
+def select_param_linear(X, y, kf, metric="accuracy", plot=True, class_weight = {1:1, -1:1}) :
     """
     Sweeps different settings for the hyperparameter of a linear-kernel SVM,
     calculating the k-fold CV performance for each setting, then selecting the
@@ -62,7 +62,6 @@ def cv_performance(clf, X, y, kf, metric="accuracy"):
     --------------------
         C -- float, optimal parameter value for linear-kernel SVM
     """
-    
     print 'Linear SVM Hyperparameter Selection based on ' + str(metric) + ':'
     C_range = 10.0 ** np.arange(-3, 3)
         ### ========== TODO : START ========== ###
