@@ -70,15 +70,15 @@ class_weight = {1:1, 0:weight}
 #print tune(X_train, y_train, 'f1_weighted')
 # 3 fold best for f1_weighted is {'penalty': 'l1', 'alpha': 0.001, 'max_iter': 1000}
 
-# perceptron_f1 = Perceptron(penalty='l1',alpha=0.001,max_iter=1000,class_weight=class_weight,random_state=42)
-# perceptron_f1.fit(X_train, y_train)
-# preds = perceptron_f1.predict(X_train)
-# print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.86483
-# preds = perceptron_f1.predict(X_test)
-# print "test f1_score: " + str(f1_score(y_test, preds, average="weighted")) # 0.81388
-# print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, preds))
-# # [[ 21   8]
-# #  [ 35 140]]
+perceptron_f1 = Perceptron(penalty='l1',alpha=0.001,max_iter=1000,class_weight=class_weight,random_state=42)
+perceptron_f1.fit(X_train, y_train)
+preds = perceptron_f1.predict(X_train)
+print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.86483
+preds = perceptron_f1.predict(X_test)
+print "test f1_score: " + str(f1_score(y_test, preds, average="weighted")) # 0.81388
+print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, preds))
+ # [[ 21   8]
+ #  [ 35 140]]
 
 
 
