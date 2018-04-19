@@ -20,7 +20,7 @@ def tune(X_train, y_train, scoring):
     # Number of features to consider at every split
     max_features = ['auto', 'sqrt']
     # Maximum number of levels in tree
-    max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
+    max_depth = [int(x) for x in np.linspace(10, 150, num = 11)]
     max_depth.append(None)
     # Minimum number of samples required to split a node
     min_samples_split = range(2, 50, 5)
@@ -42,7 +42,7 @@ def tune(X_train, y_train, scoring):
     class_weight = {1:1, 0:weight}
 
     rf = RandomForestClassifier(class_weight=class_weight, criterion="entropy")
-    rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1, scoring=scoring)
+    rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 5, verbose=2, random_state=42, n_jobs = -1, scoring=scoring)
     rf_random.fit(X_train, y_train)
     return rf_random.best_params_
     
@@ -59,10 +59,15 @@ def main():
     print "negative weight is: " + str(weight)
     class_weight = {1:1, 0:weight}
 
-    print tune(X_train, y_train, 'f1_weighted')
+    # print tune(X_train, y_train, 'f1_weighted')
     # 3 fold best for f1_weighted = {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 
     # 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 30}
-    rf_f1 = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators =  400, max_features = 'sqrt', min_samples_split = 5, max_depth = 30)
+    
+    # {'bootstrap': True, 'min_samples_leaf': 2, 'n_estimators': 1000, 'max_features': 'auto', 'min_samples_split': 22, 'max_depth': 110}
+
+    # 5 fold best
+
+    rf_f1 = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators =  400, max_features = 'sqrt', min_samples_split = 5, max_depth = 30, criterion="entropy")
     rf_f1.fit(X_train, y_train)
     preds = rf_f1.predict(X_train)
     print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.9958
@@ -70,11 +75,31 @@ def main():
     print "test f1_score: " + str(f1_score(y_test, preds, average="weighted")) # 0.88877
     print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, preds))
 
+    importances = rf_f1.feature_importances_
+    std = np.std([tree.feature_importances_ for tree in rf_f1.estimators_],
+             axis=0)
+    indices = np.argsort(importances)[::-1]
+
+    # Print the feature ranking
+    print("Feature ranking:")
+
+    for f in range(X_train.shape[1]):
+        print("%d. feature %d (%f)" % (f + 1, indices[f], importances[indices[f]]))
+
+    # Plot the feature importances of the forest
+    plt.figure()
+    plt.title("Feature importances")
+    plt.bar(range(X_train.shape[1]), importances[indices],
+       color="r", yerr=std[indices], align="center")
+    plt.xticks(range(X_train.shape[1]), indices)
+    plt.xlim([-1, X_train.shape[1]])
+    plt.show()
+
     #validations.check_overfit(rf_f1, f1_score, "weighted")
 
-    print tune(X_train, y_train, 'accuracy')
+    # print tune(X_train, y_train, 'accuracy')
     # 3 fold best for accuracy: best is {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 200, 'max_features': 'sqrt', 'min_samples_split': 2, 'max_depth': 50}
-    rf_accuracy = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators = 200, max_features = 'sqrt', min_samples_split = 2, max_depth = 50)
+    rf_accuracy = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators = 200, max_features = 'sqrt', min_samples_split = 2, max_depth = 50, criterion="entropy")
     rf_accuracy.fit(X_train, y_train)
     preds = rf_accuracy.predict(X_train)
     print "train accuracy: " + str(accuracy_score(y_train, preds)) # 1.0
@@ -86,7 +111,7 @@ def main():
 
     #print tune(X_train, y_train, 'average_precision')
     # 3 fold best for precision is {'bootstrap': False, 'min_samples_leaf': 1, 'n_estimators': 800, 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 90}
-    rf_precision = RandomForestClassifier(class_weight=class_weight, bootstrap = False, min_samples_leaf = 1, n_estimators = 800, max_features = 'sqrt', min_samples_split = 5, max_depth = 90)
+    rf_precision = RandomForestClassifier(class_weight=class_weight, bootstrap = False, min_samples_leaf = 1, n_estimators = 800, max_features = 'sqrt', min_samples_split = 5, max_depth = 90, criterion="entropy")
     rf_precision.fit(X_train, y_train)
     preds = rf_precision.predict(X_train)
     print "train precision: " + str(average_precision_score(y_train, preds)) # 0.9999
