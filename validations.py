@@ -123,8 +123,8 @@ def check_overfit(clf, metric, *args):
         test_scores.append(metric(y_test, test_preds, *args)) 
     
     x_axis = [.1,.2,.3,.4,.5,.6,.7,.8,.9]
-    plt.plot(x_axis, train_scores, 'b', label = "training error")
-    plt.plot(x_axis, test_scores, 'g', label = "test_error")
+    plt.plot(x_axis, train_scores, 'b', label = "training score")
+    plt.plot(x_axis, test_scores, 'g', label = "test score")
     plt.legend()
     plt.xlabel("fraction of data used to train model")
     plt.ylabel(str(metric))
