@@ -235,8 +235,8 @@ def make_test_train():
     y = code_truVrest()
     X, colnames = make_full_X()
     X, y = shuffle(X, y, random_state=42)
-    X_train, X_test = X[:1673], X[1673:]
-    y_train, y_test = y[:1673], y[1673:]
+    X_train, X_test = X[:1502], X[1502:] # 80-20 split
+    y_train, y_test = y[:1502], y[1502:]
     # normalize on training set and then normalize test set 
     scaler = preprocessing.StandardScaler().fit(X_train)
     X_train = scaler.transform(X_train) 
