@@ -27,6 +27,18 @@ import heapq as hp
 ## Entropy Estimation Stuff ###
 ###############################
 def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit = 2):
+    '''
+    input: 
+    X ... feature vector (n,m)
+    y ... class          (n,)
+    word_list ... dictionary of words with index
+    search_space ... How many of the words in word_list you want to consider
+    max_bag      ... The maximum of the returned words list
+    num_apprea_limit ... Words have to appreat more than num_apprear_limit times in the posts
+
+    output:
+    panda datafreme with the shape (num_sampels, words) with the label of the words
+    '''
     print '-------------------------'
     n_features = len(X[0])
     n_classes  = len(np.unique(y))
