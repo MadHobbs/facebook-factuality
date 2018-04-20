@@ -6,9 +6,10 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_precision_score, confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
-
+from sklearn.utils import shuffle
+from sklearn import metrics, preprocessing
 # ours
-from util import *
+import util
 
 ####################
 # Cross Validation #
@@ -101,8 +102,8 @@ def lineplot(x, y, label):
 
 def check_overfit(clf, metric, *args):
     '''Given a classifier function and'''
-    y = code_truVrest()
-    X = make_full_X()
+    y = util.code_truVrest()
+    X, colnames = util.make_full_X()
     X, y = shuffle(X, y, random_state=42)
     n = len(y)
     step = n/10

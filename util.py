@@ -15,6 +15,7 @@ from sklearn import metrics, preprocessing
 from sklearn.model_selection import KFold
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
+import text_processing 
 
 
 # path_data = "../data/"
@@ -210,20 +211,29 @@ def make_BoW_matrix():
 
 def make_full_X():
     '''make a feature matrix out of bag of words matrix from 
-    make_BoW_matrix and metadata'''
+    import words (highest entropy) and metadata'''
     data = pd.read_csv('clear.csv')
-    BoW = make_BoW_matrix()
+    word_list = extract_dictionary(data.status_message)
+    feature_matrix = extract_feature_vectors(data.status_message, word_list)
+    X = feature_matrix
+    y = data.Rating
+    BoW = text_processing.impWords(X,y,word_list)
+    colnames = list(BoW)
     pop_data = data[['num_reactions', 'num_comments', 'num_shares', \
     'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \
     'num_angrys', 'Category_left', 'Category_mainstream', 'Category_right']]
+    pop_data_cols = ['num_reactions', 'num_comments', 'num_shares', \
+    'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \
+    'num_angrys', 'Category_left', 'Category_mainstream', 'Category_right']
     X = np.hstack((BoW, pop_data))
-    return X
+    colnames = colnames + pop_data_cols
+    return X, colnames
 
 def make_test_train():
     '''make test and train while preprocessing to normalize
     return X_train, X_test, y_train, y_test'''
     y = code_truVrest()
-    X = make_full_X()
+    X, colnames = make_full_X()
     X, y = shuffle(X, y, random_state=42)
     X_train, X_test = X[:1673], X[1673:]
     y_train, y_test = y[:1673], y[1673:]
@@ -231,7 +241,7 @@ def make_test_train():
     scaler = preprocessing.StandardScaler().fit(X_train)
     X_train = scaler.transform(X_train) 
     X_test = scaler.transform(X_test)
-    return X_train, X_test, y_train, y_test
+    return X_train, X_test, y_train, y_test, colnames
 
 ######################################
 # Load Data -- feature extraction   ##
