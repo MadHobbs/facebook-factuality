@@ -16,6 +16,7 @@ from sklearn.model_selection import KFold
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 import text_processing 
+from sklearn.model_selection import train_test_split
 
 
 # path_data = "../data/"
@@ -234,10 +235,10 @@ def make_test_train():
     return X_train, X_test, y_train, y_test'''
     y = code_truVrest()
     X, colnames = make_full_X()
-    X, y = shuffle(X, y, random_state=42)
-    X_train, X_test = X[:1502], X[1502:] # 80-20 split
-    y_train, y_test = y[:1502], y[1502:]
-    # normalize on training set and then normalize test set 
+    np.random.seed(42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    stratify=y, 
+                                                    test_size=0.20)
     scaler = preprocessing.StandardScaler().fit(X_train)
     X_train = scaler.transform(X_train) 
     X_test = scaler.transform(X_test)
