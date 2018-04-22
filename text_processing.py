@@ -97,14 +97,7 @@ def main():
     y = data.Rating
     print np.unique(y)
 
-    # shuffle data (since file has tweets ordered by movie)
-    X, y = shuffle(X, y, random_state=1234)
-    # set random seed
-    np.random.seed(42)
-
-    X_train, X_test = X[:1950], X[1950:]
-    y_train, y_test = y[:1950], y[1950:]
-
+    X_train, X_test, y_train, y_test, colnames = make_test_train()
     # define score
     f1_scorer = make_scorer(f1_score, average='samples')
 
@@ -119,18 +112,18 @@ def main():
     print clf.best_score_
     '''
 
-    # clf = SVC(kernel='linear', C = 0.1)
-    # clf.fit(X_train, y_train)
-    # y_pred = clf.predict(X_test)
+    clf = SVC(kernel='linear', C = 0.1)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
-    # #print clf.coef_
+    print clf.coef_
 
-    # print metrics.f1_score(y_test, y_pred, average='weighted')
+    print metrics.f1_score(y_test, y_pred, average='weighted')
 
-    # print "training error"
-    # clf.fit(X_train, y_train)
-    # y_pred = clf.predict(X_train)
-    # print metrics.f1_score(y_train, y_pred, average='weighted')
+    print "training error"
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_train)
+    print metrics.f1_score(y_train, y_pred, average='weighted')
 
     pandaman=impWords(X,y,word_list)
     print pandaman
