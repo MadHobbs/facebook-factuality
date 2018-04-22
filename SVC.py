@@ -15,10 +15,10 @@ from sklearn.svm import SVC
 
 def tune(X_train, y_train, scoring):
     
-    kernel = ['rbf', 'poly', 'linear']
+    kernel = ['linear']
     degree = range(2,6)
-    C_range = np.logspace(-2, 10, 13)
-    gamma_range = np.logspace(-9, 3, 13)
+    C_range = [10**(-3), 10**(-2), 10**(-1), 1, 10, 10**(2), 10**(3)]
+    gamma_range = [10**(-3), 10**(-2), 10**(-1), 1, 10, 10**(2), 10**(3)]
 
     # Create the random grid
     random_grid = {'kernel': kernel,
@@ -59,7 +59,7 @@ def main():
 
     # 5 fold best trained on entropy ones {'bootstrap': False, 'min_samples_leaf': 2, 'n_estimators': 1600, 'max_features': 'sqrt', 'min_samples_split': 27, 'max_depth': 80}
     # smaller search area : {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 100}
-    rf_f1 = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators =  1000, max_features = 'sqrt', min_samples_split = 2, max_depth = 20, criterion="entropy")
+    rf_f1 = SVC(class_weight=class_weight, kernel="poly", C = .01, gamma = 100, degree = 4)
     rf_f1.fit(X_train, y_train)
     preds = rf_f1.predict(X_train)
     print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.9958
@@ -67,16 +67,16 @@ def main():
     print "test f1_score: " + str(f1_score(y_test, preds, average="weighted")) # 0.88877
     print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, preds))
 
-    importances = rf_f1.feature_importances_
-    std = np.std([tree.feature_importances_ for tree in rf_f1.estimators_],
-             axis=0)
-    indices = np.argsort(importances)[::-1]
+    #importances = rf_f1.feature_importances_
+    #std = np.std([tree.feature_importances_ for tree in rf_f1.estimators_],
+      #       axis=0)
+    #indices = np.argsort(importances)[::-1]
 
     # Print the feature ranking
-    print("Feature ranking:")
+    #print("Feature ranking:")
 
-    for f in range(X_train.shape[1]):
-        print("%d. %s (%f)" % (f + 1, colnames[indices[f]], importances[indices[f]]))
+    #for f in range(X_train.shape[1]):
+        #print("%d. %s (%f)" % (f + 1, colnames[indices[f]], importances[indices[f]]))
 
     # Plot the feature importances of the forest
     #plt.figure()

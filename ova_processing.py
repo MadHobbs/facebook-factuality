@@ -193,6 +193,11 @@ print "f1 CV score"
 print score/split
 '''
 
+X_train, X_test, y_train, y_test, colnames = make_test_train()
+
+y_truVrest_train = y_train
+y_nfcVrest_test = y_test
+
 svm_linear_clf_truVrest= SVC(kernel='linear')
 svm_linear_clf_truVrest.fit(X_train, y_truVrest_train)
 y_truVrest_pred = svm_linear_clf_truVrest.predict(X_test)
@@ -212,7 +217,7 @@ for key in word_list.keys():
 rank_idx = rank_idx[::-1]
 print rank_idx
 
-print('\n Words contribute most to No Factual Content')
+print('\n Words contribute most to Not Mostly Factual Content')
 for key in word_list.keys():
     for idx in rank_idx[:50]:
         if word_list[key] == idx:

@@ -39,7 +39,7 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
     output:
     panda datafreme with the shape (num_sampels, words) with the label of the words
     '''
-    print '-------------------------'
+    #print '-------------------------'
     n_features = len(X[0])
     n_classes  = len(np.unique(y))
     tree = Tree(n_features,n_classes)
@@ -52,7 +52,9 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
     print feature_index
     print '---------------y------------------'
 
-
+    #print feature_index
+    #print '---------------y------------------'
+        
     print '======================================='
     feature_dic = {}
     n = 0 
@@ -62,10 +64,12 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
                 if sum(X[:,i]) > num_appear_limit:
                     n+=1
                     feature_dic[key] = X[:,i]
+                    print key
+                    print sum(X[:,i])
                 if n == max_bag:
                     print 'there are ', n, 'bag of words'
                     return pd.DataFrame(data=feature_dic)
-    print 'there are ', n, 'bag of words'
+    #print 'there are ', n, 'bag of words'
     return pd.DataFrame(data=feature_dic)
 
 
@@ -96,14 +100,7 @@ def main():
     y = data.Rating
     print np.unique(y)
 
-    # shuffle data (since file has tweets ordered by movie)
-    X, y = shuffle(X, y, random_state=1234)
-    # set random seed
-    np.random.seed(42)
-
-    X_train, X_test = X[:1950], X[1950:]
-    y_train, y_test = y[:1950], y[1950:]
-
+    X_train, X_test, y_train, y_test, colnames = make_test_train()
     # define score
     f1_scorer = make_scorer(f1_score, average='samples')
 
@@ -118,26 +115,25 @@ def main():
     print clf.best_score_
     '''
 
-    # clf = SVC(kernel='linear', C = 0.1)
-    # clf.fit(X_train, y_train)
-    # y_pred = clf.predict(X_test)
+    clf = SVC(kernel='linear', C = 0.1)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
-    # #print clf.coef_
+    print clf.coef_
 
-    # print metrics.f1_score(y_test, y_pred, average='weighted')
+    print metrics.f1_score(y_test, y_pred, average='weighted')
 
-    # print "training error"
-    # clf.fit(X_train, y_train)
-    # y_pred = clf.predict(X_train)
-    # print metrics.f1_score(y_train, y_pred, average='weighted')
+    print "training error"
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_train)
+    print metrics.f1_score(y_train, y_pred, average='weighted')
 
     pandaman=impWords(X,y,word_list)
     print pandaman
 
     
-
 if __name__ == "__main__" :
-    main()
+   main()
 
 
 
