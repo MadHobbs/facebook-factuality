@@ -68,7 +68,7 @@ def cv_performance_one_trial(clf, train_data, kf) :
         scores     -- numpy array of shape (n_fold, )
                       each element is the (accuracy) score of one fold
     """
-    
+
     scores = np.zeros(kf.n_splits)
     
     ### ========== TODO : START ========== ###

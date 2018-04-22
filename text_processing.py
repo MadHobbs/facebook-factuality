@@ -46,14 +46,13 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
     information_gain_list = np.zeros(len(X[0]))
 
     for i in range(len(X)):
-        if i %100 == 0:
-            information_gain_list[i] = tree._information_gain(X[:,i],y)[0]
+        information_gain_list[i] = tree._information_gain(X[:,i],y)[0]
 
     feature_index = hp.nlargest(500, range(len(information_gain_list)), information_gain_list.take)
     print feature_index
     print '---------------y------------------'
-        
-        
+
+
     print '======================================='
     feature_dic = {}
     n = 0 

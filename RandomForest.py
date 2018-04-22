@@ -20,7 +20,7 @@ def tune(X_train, y_train, scoring):
     # Number of features to consider at every split
     max_features = ['auto', 'sqrt']
     # Maximum number of levels in tree
-    max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
+    max_depth = [int(x) for x in np.linspace(10, 110, num = 11)] 
     max_depth.append(None)
     # Minimum number of samples required to split a node
     min_samples_split = [2, 5, 10]
@@ -60,17 +60,22 @@ def main():
     print "negative weight is: " + str(weight)
     class_weight = {1:1, 0:weight}
 
+    ################################################################################### ##########################################
     # 5 fold cv
     # best_params, best_score = tune(X_train, y_train, 'f1_weighted')
     # print best_params
     # print best_score
     # 3 fold best for f1_weighted = {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 
     # 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 30}
-    
-    # {'bootstrap': True, 'min_samples_leaf': 2, 'n_estimators': 1000, 'max_features': 'auto', 'min_samples_split': 22, 'max_depth': 110}
-
-    # 5 fold best trained on entropy ones {'bootstrap': False, 'min_samples_leaf': 2, 'n_estimators': 1600, 'max_features': 'sqrt', 'min_samples_split': 27, 'max_depth': 80}
-    # smaller search area : {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 100}
+    #
+    # {'bootstrap': True, 'min_samples_leaf': 2, 'n_estimators': 1000, 'max_features': 'auto', 
+    # 'min_samples_split': 22, 'max_depth': 110}
+    #
+    # 5 fold best trained on entropy ones {'bootstrap': False, 'min_samples_leaf': 2, 'n_estimators': 1600, 
+    # 'max_features': 'sqrt', 'min_samples_split': 27, 'max_depth': 80}
+    # smaller search area : {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 
+    # 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 100}
+    ########################################################################################################
     rf_f1 = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators =  1000, max_features = 'sqrt', min_samples_split = 2, max_depth = 20, criterion="entropy")
     rf_f1.fit(X_train, y_train)
     preds = rf_f1.predict(X_train)
@@ -107,7 +112,7 @@ def main():
     rf_accuracy = rf_f1
     rf_accuracy.fit(X_train, y_train)
     preds = rf_accuracy.predict(X_train)
-    print "train accuracy: " + str(accuracy_score(y_train, preds)) # 1.0
+    print "train accuracy: " + str(accuracy_score(y_train,preds)) # 1.0
     preds = rf_accuracy.predict(X_test)
     print "test accuracy: " + str(accuracy_score(y_test, preds))
     print "confusion matrix trained with accuracy: \n" + str(confusion_matrix(y_test, preds)) #0.887
