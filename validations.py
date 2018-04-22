@@ -8,6 +8,7 @@ from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_preci
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.utils import shuffle
 from sklearn import metrics, preprocessing
+from sklearn.dummy import DummyClassifier
 # ours
 import util
 
@@ -109,6 +110,8 @@ def check_overfit(clf, metric, *args):
     step = n/10
     train_scores = []
     test_scores = []
+    dummy_scores =[]
+    dummy = DummyClassifier(strategy = "most_frequent")
     for i in range(step, n-step, step):
         print i
         X_train, X_test = X[:i], X[i:]
@@ -122,13 +125,19 @@ def check_overfit(clf, metric, *args):
         train_scores.append(metric(y_train, train_preds, *args))
         test_preds = clf.predict(X_test)
         test_scores.append(metric(y_test, test_preds, *args)) 
+
+        dummy.fit(X_train, y_train)
+        test_preds = dummy.predict(X_test)
+        dummy_scores.append(metric(y_test, test_preds, *args))
     
     x_axis = [.1,.2,.3,.4,.5,.6,.7,.8,.9]
     plt.plot(x_axis, train_scores, 'b', label = "training score")
     plt.plot(x_axis, test_scores, 'g', label = "test score")
+    plt.plot(x_axis, dummy_scores, 'k--', label = "baseline (majority vote) score")
     plt.legend()
     plt.xlabel("fraction of data used to train model")
-    plt.ylabel(str(metric))
+    plt.ylabel("accuracy")
+    plt.ylim(0, 1)
     plt.show()
     
 

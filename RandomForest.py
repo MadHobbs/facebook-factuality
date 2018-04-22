@@ -100,6 +100,7 @@ def main():
     #plt.show()
 
     #validations.check_overfit(rf_f1, f1_score, "weighted")
+    validations.check_overfit(rf_f1, accuracy_score, "accuracy")
 
     # print tune(X_train, y_train, 'accuracy')
     # 3 fold best for accuracy: best is {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 200, 'max_features': 'sqrt', 'min_samples_split': 2, 'max_depth': 50}

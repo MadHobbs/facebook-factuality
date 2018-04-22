@@ -17,8 +17,8 @@ def tune(X_train, y_train, scoring):
     
     kernel = ['linear']
     degree = range(2,6)
-    C_range = np.logspace(-2, 10, 13)
-    gamma_range = np.logspace(-9, 3, 13)
+    C_range = [10**(-3), 10**(-2), 10**(-1), 1, 10, 10**(2), 10**(3)]
+    gamma_range = [10**(-3), 10**(-2), 10**(-1), 1, 10, 10**(2), 10**(3)]
 
     # Create the random grid
     random_grid = {'kernel': kernel,
@@ -49,9 +49,9 @@ def main():
     class_weight = {1:1, 0:weight}
 
     # 5 fold cv
-    #best_params, best_score = tune(X_train, y_train, 'f1_weighted')
-    #print best_params
-    #print best_score
+    best_params, best_score = tune(X_train, y_train, 'f1_weighted')
+    print best_params
+    print best_score
     # 3 fold best for f1_weighted = {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 
     # 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 30}
     
