@@ -39,7 +39,7 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
     output:
     panda datafreme with the shape (num_sampels, words) with the label of the words
     '''
-    print '-------------------------'
+    #print '-------------------------'
     n_features = len(X[0])
     n_classes  = len(np.unique(y))
     tree = Tree(n_features,n_classes)
@@ -50,8 +50,8 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
             information_gain_list[i] = tree._information_gain(X[:,i],y)[0]
 
     feature_index = hp.nlargest(500, range(len(information_gain_list)), information_gain_list.take)
-    print feature_index
-    print '---------------y------------------'
+    #print feature_index
+    #print '---------------y------------------'
         
         
     print '======================================='
@@ -63,10 +63,12 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
                 if sum(X[:,i]) > num_appear_limit:
                     n+=1
                     feature_dic[key] = X[:,i]
+                    #print key
+                    #print sum(X[:,i])
                 if n == max_bag:
                     print 'there are ', n, 'bag of words'
                     return pd.DataFrame(data=feature_dic)
-    print 'there are ', n, 'bag of words'
+    #print 'there are ', n, 'bag of words'
     return pd.DataFrame(data=feature_dic)
 
 
@@ -130,8 +132,8 @@ def main():
 
     
 
-if __name__ == "__main__" :
-    main()
+#if __name__ == "__main__" :
+#    main()
 
 
 
