@@ -10,12 +10,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import validations
 from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_precision_score, confusion_matrix
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 from sklearn.svm import SVC
 
 def tune(X_train, y_train, scoring):
     
-    kernel = ['linear']
+    kernel = ['poly']
     degree = range(2,6)
     C_range = [10**(-3), 10**(-2), 10**(-1), 1, 10, 10**(2), 10**(3)]
     gamma_range = [10**(-3), 10**(-2), 10**(-1), 1, 10, 10**(2), 10**(3)]
@@ -24,7 +24,8 @@ def tune(X_train, y_train, scoring):
     random_grid = {'kernel': kernel,
                'degree': degree,
                'C': C_range,
-               'gamma': gamma_range}
+               'gamma': gamma_range
+               }
 
     fracNeg = len(y_train[y_train == 0])/float(len(y_train))
     weight = (1-fracNeg)/float(fracNeg) 
@@ -33,6 +34,7 @@ def tune(X_train, y_train, scoring):
     svc = SVC(class_weight=class_weight)
     # automatically does stratified kfold
     rf_random = RandomizedSearchCV(estimator = svc, param_distributions = random_grid, n_iter = 100, cv = 5, verbose=2, random_state=42, n_jobs = -1, scoring=scoring)
+    #rf_random = GridSearchCV(estimator = svc, param_grid = random_grid, scoring=scoring)
     rf_random.fit(X_train, y_train)
     return rf_random.best_params_, rf_random.best_score_
 
@@ -52,14 +54,8 @@ def main():
     best_params, best_score = tune(X_train, y_train, 'f1_weighted')
     print best_params
     print best_score
-    # 3 fold best for f1_weighted = {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 
-    # 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 30}
-    
-    # {'bootstrap': True, 'min_samples_leaf': 2, 'n_estimators': 1000, 'max_features': 'auto', 'min_samples_split': 22, 'max_depth': 110}
-
-    # 5 fold best trained on entropy ones {'bootstrap': False, 'min_samples_leaf': 2, 'n_estimators': 1600, 'max_features': 'sqrt', 'min_samples_split': 27, 'max_depth': 80}
-    # smaller search area : {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 100}
-    rf_f1 = SVC(class_weight=class_weight, kernel="poly", C = .01, gamma = 100, degree = 4)
+    # C = 1000 for linear
+    rf_f1 = SVC(class_weight=class_weight, kernel="linear", C = 1000)
     rf_f1.fit(X_train, y_train)
     preds = rf_f1.predict(X_train)
     print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.9958
@@ -100,4 +96,16 @@ def main():
     print "test accuracy: " + str(accuracy_score(y_test, preds))
     print "confusion matrix trained with accuracy: \n" + str(confusion_matrix(y_test, preds)) #0.887
     
-    #validations.check_overfit(rf_accuracy, accuracy_score)
+    validations.check_overfit(rf_accuracy, accuracy_score)
+
+    rank_idx = np.argsort(rf_f1.coef_)[0]
+    print('\n Features that contribute most to Not Mostly Factual Content')
+    for idx in rank_idx[:50]:
+        print colnames[idx]
+
+    rank_idx = rank_idx[::-1]
+    print('\n Features that contribute most to Mostly Factual Content')
+    for idx in rank_idx[:50]:
+        print colnames[idx]
+
+    

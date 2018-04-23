@@ -13,7 +13,10 @@ from sklearn.svm import SVC
 from sklearn.utils import shuffle
 from sklearn import metrics, preprocessing
 from sklearn.model_selection import KFold
-from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import wordnet
+from nltk.stem import PorterStemmer
+import Stemmer
+from nltk.tokenize import RegexpTokenizer, sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 import text_processing 
 from sklearn.model_selection import train_test_split
@@ -106,9 +109,14 @@ def extract_words(input_string) :
                                  stop words and punctuation removed
     """
     stop_words = set(stopwords.words('english'))
-    tokenizer = RegexpTokenizer(r'\w+')
+    input_string = input_string.replace("donald", "trump")
+    input_string = input_string.replace("hillary", "clinton")
+    tokenizer = RegexpTokenizer(pattern = "\w+")
     input_string = input_string.lower()
-    words = tokenizer.tokenize(input_string) 
+    words = tokenizer.tokenize(input_string)
+    stemmer = Stemmer.Stemmer('english')
+    #ps = PorterStemmer() 
+    #wnl = WordNetLemmatizer()
 
     filtered_words = [w for w in words if not w in stop_words]
     filtered_words = []
@@ -117,8 +125,9 @@ def extract_words(input_string) :
  
     for w in words:
         if w not in stop_words and len(w) > 1 and w not in list_of_crap:
-            filtered_words.append(w)
+            filtered_words = filtered_words + [w] 
 
+    #filtered_words = stemmer.stemWords(filtered_words)
     return filtered_words
 
 def extract_dictionary(df_column) :
@@ -220,14 +229,16 @@ def make_full_X():
     y = data.Rating
     BoW = text_processing.impWords(X,y,word_list)
     colnames = list(BoW)
-    pop_data = data[['num_reactions', 'num_comments', 'num_shares', \
+    pop_data = data[['num_comments', 'num_shares', \
     'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \
     'num_angrys', 'Category_left', 'Category_mainstream', 'Category_right']]
     pop_data_cols = ['num_reactions', 'num_comments', 'num_shares', \
     'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \
     'num_angrys', 'Category_left', 'Category_mainstream', 'Category_right']
-    X = np.hstack((BoW, pop_data))
-    colnames = colnames + pop_data_cols
+    #X = np.hstack((BoW, pop_data))
+    X = pop_data
+    #colnames = colnames + pop_data_cols
+    colnames = pop_data_cols
     return X, colnames
 
 def make_test_train():

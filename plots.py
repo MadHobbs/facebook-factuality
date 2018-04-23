@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rc
 
 data = pd.read_csv('clear.csv')
-
+'''
 feats = ["Category_mainstream", "num_shares", "Category_right", "num_wows", "num_likes", "num_reactions", \
 "num_comments", "num_angrys", "num_hahas", "num_sads", "num_loves", "donald", \
 "trump", "Category_left", "clinton", "president", "debate", "says", "video", \
@@ -133,7 +133,7 @@ plt.ylabel("Mean Count per Post")
 plt.show()
 
 #######################
-
+'''
 mixture = [65, 8, 142]
 false = [19, 0, 56]
 true = [252, 1073, 262]
@@ -150,11 +150,11 @@ greenBars = [i / float(j) * 100 for i,j in zip(df['mostly true'], totals)]
 barWidth = 0.85
 names = ('Left','Mainstream','Center')
 # Create green Bars
-plt.bar(r, greenBars, color='#b5ffb9', edgecolor='white', width=barWidth, label = "mostly true")
+plt.bar(r, raw_data["mostly true"], color='#b5ffb9', edgecolor='white', width=barWidth, label = "mostly true")
 # Create orange Bars
-plt.bar(r, orangeBars, bottom=greenBars, color='#f9bc86', edgecolor='white', width=barWidth, label = "mostly false")
+plt.bar(r, raw_data["mixture"], bottom=raw_data["mostly true"], color='#f9bc86', edgecolor='white', width=barWidth, label = "mixture of true and false")
 # Create blue Bars
-plt.bar(r, blueBars, bottom=[i+j for i,j in zip(greenBars, orangeBars)], color='#a3acff', edgecolor='white', width=barWidth, label = "mixture of true and false")
+plt.bar(r, raw_data["mostly false"], bottom=[i+j for i,j in zip(raw_data["mostly true"], raw_data["mixture"])], color='#a3acff', edgecolor='white', width=barWidth, label = "mostly false")
  
 # Custom x axis
 plt.xticks(r, names)
@@ -164,8 +164,8 @@ plt.ylabel("Percentage")
 # Show graphic
 plt.show()
 
-
-'''fig, ax = plt.subplots()
+'''
+fig, ax = plt.subplots()
 # left
 "print left"
 print data.groupby(['Rating'])['Category_left'].sum()
@@ -196,8 +196,8 @@ plt.legend(loc='upper left')
 '''
 # f1 
 baseline = 0.846
-x = ["Random Forest"]
-values = np.array([0.896])
+names = ["RF Meta Only", "Random Forest", "Linear SVC", "Perceptron"]
+values = np.array([0.872, 0.868, 0.853, 0.842])
 x = range(len(values))
 
 # split it up
@@ -206,14 +206,17 @@ x = range(len(values))
 
 # and plot it
 fig, ax = plt.subplots()
-ax.bar(x, values, color="g", label = "Random Forest")
+ax.bar(x, values, color="g")
 #ax.bar(x, above_threshold, 0.35, color="r",
         #bottom=below_threshold)
 
+plt.xticks(x, names, rotation = 70)
+
 # horizontal line indicating the threshold
 ax.plot([0., 4.5], [baseline, baseline], "k--", label = "Majority Vote")
-plt.title("Held-out Accuracy Across Different Models")
-plt.ylabel("Accuracy")
+plt.title("Held-out F1 Score Across Different Models")
+plt.ylabel("F1 Score")
 plt.xlabel("Classifier")
 plt.legend()
+plt.ylim(0,1)
 plt.show()

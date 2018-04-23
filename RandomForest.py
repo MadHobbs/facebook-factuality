@@ -51,6 +51,7 @@ def tune(X_train, y_train, scoring):
 def main():
     X_train, X_test, y_train, y_test, colnames = util.make_test_train()
 
+
     fracNeg = len(y_train[y_train == 0])/float(len(y_train))
     print "fraction of data training examples which have negative response: " + str(fracNeg)
     fracPos = len(y_train[y_train == 1])/float(len(y_train))
@@ -62,9 +63,9 @@ def main():
 
     ################################################################################### ##########################################
     # 5 fold cv
-    # best_params, best_score = tune(X_train, y_train, 'f1_weighted')
-    # print best_params
-    # print best_score
+    #best_params, best_score = tune(X_train, y_train, 'f1_weighted')
+    #print best_params
+    #print best_score
     # 3 fold best for f1_weighted = {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 
     # 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 30}
     #
@@ -75,8 +76,12 @@ def main():
     # 'max_features': 'sqrt', 'min_samples_split': 27, 'max_depth': 80}
     # smaller search area : {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 
     # 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 100}
+    #
+    # the one we're actually using because has right features:
+    # {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 400, 'max_features': 'sqrt', 'min_samples_split': 5, 'max_depth': 100}
     ########################################################################################################
-    rf_f1 = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators =  1000, max_features = 'sqrt', min_samples_split = 2, max_depth = 20, criterion="entropy")
+    rf_f1 = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators =  400, max_features = 'sqrt', min_samples_split = 5, max_depth = 100, criterion="entropy")
+    rf_f1 = RandomForestClassifier(class_weight=class_weight, bootstrap = True, min_samples_leaf = 1, n_estimators =  1600, max_features = 'sqrt', min_samples_split = 10, max_depth = None, criterion="entropy")
     rf_f1.fit(X_train, y_train)
     preds = rf_f1.predict(X_train)
     print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.9958
@@ -92,8 +97,13 @@ def main():
     # Print the feature ranking
     print("Feature ranking:")
 
+    #feats = []
+    #imps = []
     for f in range(X_train.shape[1]):
         print("%d. %s (%f)" % (f + 1, colnames[indices[f]], importances[indices[f]]))
+        #feats.append(colnames[indices[f]])
+        #imps.append(importances[indices[f]])
+
 
     # Plot the feature importances of the forest
     #plt.figure()
@@ -105,7 +115,7 @@ def main():
     #plt.show()
 
     #validations.check_overfit(rf_f1, f1_score, "weighted")
-    validations.check_overfit(rf_f1, accuracy_score, "accuracy")
+   #validations.check_overfit(rf_f1, accuracy_score, "accuracy")
 
     # print tune(X_train, y_train, 'accuracy')
     # 3 fold best for accuracy: best is {'bootstrap': True, 'min_samples_leaf': 1, 'n_estimators': 200, 'max_features': 'sqrt', 'min_samples_split': 2, 'max_depth': 50}
