@@ -231,7 +231,8 @@ def make_full_X():
     feature_matrix = extract_feature_vectors(data.status_message, word_list)
     X = feature_matrix
     y = data.Rating
-    BoW = text_processing.impWords(X,y,word_list)
+    BoW = make_BoW_matrix()
+    #BoW = text_processing.impWords(X,y,word_list)
     colnames = list(BoW)
     pop_data = data[['num_comments', 'num_shares', \
     'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \

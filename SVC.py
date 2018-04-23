@@ -7,6 +7,7 @@ Description : SVC Tuning and Performance
 
 import util
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import validations
 from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_precision_score, confusion_matrix
@@ -40,10 +41,11 @@ def tune(X_train, y_train, scoring):
 
 def main():
     #X_train, X_test, y_train, y_test, colnames = util.make_test_train()
-    X_train = pd.read_csv("X_train.csv")
-    X_test = pd.read_csv("X_test.csv")
-    y_train = pd.read_csv("y_train.csv") 
-    y_test = pd.read_csv("y_test.csv")
+    
+    X_train = np.genfromtxt('X_train.csv',delimiter=',')
+    X_test = np.genfromtxt('X_test.csv',delimiter=',')
+    y_train = np.genfromtxt('y_train.csv',delimiter=',')
+    y_test = np.genfromtxt('y_test.csv',delimiter=',')
 
     colnames = list(X_train)
 
@@ -57,9 +59,9 @@ def main():
     class_weight = {1:1, 0:weight}
 
     # 5 fold cv
-    best_params, best_score = tune(X_train, y_train, 'f1_weighted')
-    print best_params
-    print best_score
+    #best_params, best_score = tune(X_train, y_train, 'f1_weighted')
+    #print best_params
+    #print best_score
     # C = 1000 for linear
     rf_f1 = SVC(class_weight=class_weight, kernel="linear", C = 1000)
     rf_f1.fit(X_train, y_train)
