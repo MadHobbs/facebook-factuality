@@ -179,7 +179,7 @@ class Tree(object) :
         # compute optimal conditional entropy by trying all thresholds
         thresholds = np.empty(n_values - 1) # possible thresholds
         H_conds = np.empty(n_values - 1)    # associated conditional entropies
-        for i in xrange(n_values - 1) :
+        for i in range(n_values - 1) :
             threshold = (values[i] + values[i+1]) / 2.
             thresholds[i] = threshold
             
@@ -286,7 +286,7 @@ class Tree(object) :
         # compute optimal information gain by trying all features
         thresholds = np.empty(d) # best threshold for each feature
         scores     = np.empty(d) # best information gain for each feature
-        for j in xrange(d) :
+        for j in range(d) :
             if (X[:,j] == X[0,j]).all() :
                 # skip if all feature values equal
                 score, threshold = -1, None # use an invalid (but numeric) score
@@ -588,7 +588,7 @@ def print_tree(decision_tree, feature_names=None, class_names=None, root=0, dept
         raise NotImplementedError()
     
     if depth == 1:
-        print 'def predict(x):'
+        print ('def predict(x):')
     
     indent = '    ' * depth
     
@@ -610,7 +610,7 @@ def print_tree(decision_tree, feature_names=None, class_names=None, root=0, dept
     
     # main code
     if left_child == tree._tree.TREE_LEAF:
-        print indent + 'return %s # %s' % (class_str, node_str)
+        print (indent + 'return %s # %s' % (class_str, node_str))
     else:
         # determine feature name
         if feature_names is not None:
@@ -618,9 +618,9 @@ def print_tree(decision_tree, feature_names=None, class_names=None, root=0, dept
         else:
             name = "x_%d" % t.feature[root]
         
-        print indent + 'if %s <= %.2f: # %s' % (name, t.threshold[root], node_str)
+        print (indent + 'if %s <= %.2f: # %s' % (name, t.threshold[root], node_str))
         print_tree(t, feature_names, class_names, root=left_child, depth=depth+1)
         
-        print indent + 'else:'
+        print (indent + 'else:')
         print_tree(t, feature_names, class_names, root=right_child, depth=depth+1)
 

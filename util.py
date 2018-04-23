@@ -221,7 +221,7 @@ def make_BoW_matrix():
 
 def make_full_X():
     '''make a feature matrix out of bag of words matrix from 
-    import words (highest entropy) and metadata'''
+    import words (lowest entropy) and metadata'''
     data = pd.read_csv('clear.csv')
     word_list = extract_dictionary(data.status_message)
     feature_matrix = extract_feature_vectors(data.status_message, word_list)
