@@ -5,6 +5,25 @@ from matplotlib import rc
 
 data = pd.read_csv('clear.csv')
 
+feats = ["Category_mainstream", "num_shares", "Category_right", "num_wows", "num_likes", "num_reactions", \
+"num_comments", "num_angrys", "num_hahas", "num_sads", "num_loves", "donald", \
+"trump", "Category_left", "clinton", "president", "debate", "says", "video", \
+"republican", "said", "america", "george", "americans", "racist"]
+
+imps = [0.135356, 0.099026, 0.098160, 0.066903, 0.064147, 0.061870, 0.061593, 0.050732, \
+0.047292, 0.045151, 0.044853, 0.019866, \
+0.015771, 0.013685, 0.008299, 0.005285, 0.004969, 0.004541, 0.004141, 0.004071, \
+0.003881, 0.003496, 0.003278, 0.003093, 0.003005]
+
+r = range(len(feats))
+plt.bar(r, imps, color = "blue")
+plt.xticks(r, feats, rotation = 70)
+plt.xlabel("Feature")
+plt.ylabel("Importance")
+plt.title("Random Forests Feature Importance")
+# Show graphic
+plt.show()
+
 # likes
 print "likes"
 #print data.groupby(['Rating'])['num_likes'].sum()
