@@ -49,13 +49,13 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
         information_gain_list[i] = tree._information_gain(X[:,i],y)[0]
 
     feature_index = hp.nlargest(500, range(len(information_gain_list)), information_gain_list.take)
-    print feature_index
-    print '---------------y------------------'
+    print (feature_index)
+    print ('---------------y------------------')
 
     #print feature_index
     #print '---------------y------------------'
         
-    print '======================================='
+    print ('=======================================')
 
     # For wordMap
     info_gain_dic = {} 
@@ -67,11 +67,11 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
                 if sum(X[:,i]) > num_appear_limit:
                     n+=1
                     feature_dic[key] = X[:,i]
-                    print key
-                    print sum(X[:,i])
+                    print (key)
+                    print (sum(X[:,i]))
                     info_gain_dic[key] = information_gain_list[value]
                 if n == max_bag:
-                    print 'there are ', n, 'bag of words'
+                    print ('there are ', n, 'bag of words')
                     return pd.DataFrame(data=feature_dic)
 
     # For wordMap
@@ -101,13 +101,13 @@ def impWords_info_dic(X,y,word_list,search_space = 300, max_bag = 200, num_appea
         information_gain_list[i] = tree._information_gain(X[:,i],y)[0]
 
     feature_index = hp.nlargest(500, range(len(information_gain_list)), information_gain_list.take)
-    print feature_index
-    print '---------------y------------------'
+    # print feature_index
+    # print '---------------y------------------'
 
     #print feature_index
     #print '---------------y------------------'
         
-    print '======================================='
+    # print '======================================='
 
     # For wordMap
     info_gain_dic = {} 
@@ -120,7 +120,7 @@ def impWords_info_dic(X,y,word_list,search_space = 300, max_bag = 200, num_appea
                     n+=1
                     info_gain_dic[key] = information_gain_list[value]
                 if n == max_bag:
-                    print 'there are ', n, 'bag of words'
+                    # print 'there are ', n, 'bag of words'
                     return info_gain_dic
     # For wordMap
 
@@ -128,9 +128,9 @@ def impWords_info_dic(X,y,word_list,search_space = 300, max_bag = 200, num_appea
     return info_gain_dic
 
 def wordMap(info_gain_dic):
-    print info_gain_dic
+    print (info_gain_dic)
     for word, gain in info_gain_dic.iteritems():
-        print (word + " ") * int(gain*1000)
+        print ((word + " ") * int(gain*1000))
     
 ######################################################################
 # MAIN #
@@ -147,7 +147,7 @@ def main():
     word_totals = feature_matrix.sum(axis=0)
     rank_idx = np.argsort(word_totals)
     rank_idx = rank_idx[::-1]
-    print rank_idx[:200]
+    print (rank_idx[:200])
 
     # for key in word_list.keys():
     #     for idx in rank_idx[:200]:
@@ -155,9 +155,9 @@ def main():
     #             print key
 
     X = feature_matrix
-    print X.shape
+    # print X.shape
     y = data.Rating
-    print np.unique(y)
+    # print np.unique(y)
 
     X_train, X_test, y_train, y_test, colnames = make_test_train()
     # define score

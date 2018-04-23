@@ -69,7 +69,7 @@ def select_param_linear(X, y, kf, metric="accuracy", plot=True, class_weight = {
     --------------------
         C -- float, optimal parameter value for linear-kernel SVM
     """
-    print 'Linear SVM Hyperparameter Selection based on ' + str(metric) + ':'
+    print ('Linear SVM Hyperparameter Selection based on ' + str(metric) + ':')
     C_range = 10.0 ** np.arange(-3, 3)
         ### ========== TODO : START ========== ###
     # part 2c: select optimal hyperparameter using cross-validation
@@ -113,7 +113,7 @@ def check_overfit(clf, metric, *args):
     dummy_scores =[]
     dummy = DummyClassifier(strategy = "most_frequent")
     for i in range(step, n-step, step):
-        print i
+        print (i)
         X_train, X_test = X[:i], X[i:]
         y_train, y_test = y[:i], y[i:]
         # normalize on training set and then normalize test set 
