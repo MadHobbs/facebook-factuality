@@ -109,19 +109,23 @@ def extract_words(input_string) :
                                  stop words and punctuation removed
     """
     stop_words = set(stopwords.words('english'))
+    #input_string = input_string.encode("utf-8")
+    input_string = unicode(input_string, "utf-8")
     input_string = input_string.replace("donald", "trump")
     input_string = input_string.replace("hillary", "clinton")
     tokenizer = RegexpTokenizer(pattern = "\w+")
     input_string = input_string.lower()
     words = tokenizer.tokenize(input_string)
-    stemmer = Stemmer.Stemmer('english')
-    #ps = PorterStemmer() 
+    #stemmer = Stemmer.Stemmer('english')
+    stemmer = PorterStemmer() 
     #wnl = WordNetLemmatizer()
 
     filtered_words = [w for w in words if not w in stop_words]
     filtered_words = []
 
-    list_of_crap = ['http', 'ws', 'abcn', 'www', 'com', '2d5ogyb', '2cndgea', 'ly', '2cygp9w', '2d6hx9w', 'de', 'lz', '2ccpesl', '00', 'et', '2cyazvp', '2ck2xe1', '2d2iuqb']
+    filtered_words = [stemmer.stem(word) for word in words]
+
+    list_of_crap = ['utf8', 'http', 'ws', 'abcn', 'www', 'com', '2d5ogyb', '2cndgea', 'ly', '2cygp9w', '2d6hx9w', 'de', 'lz', '2ccpesl', '00', 'et', '2cyazvp', '2ck2xe1', '2d2iuqb']
  
     for w in words:
         if w not in stop_words and len(w) > 1 and w not in list_of_crap:
@@ -235,10 +239,10 @@ def make_full_X():
     pop_data_cols = ['num_reactions', 'num_comments', 'num_shares', \
     'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \
     'num_angrys', 'Category_left', 'Category_mainstream', 'Category_right']
-    #X = np.hstack((BoW, pop_data))
-    X = pop_data
-    #colnames = colnames + pop_data_cols
-    colnames = pop_data_cols
+    X = np.hstack((BoW, pop_data))
+    #X = pop_data
+    colnames = colnames + pop_data_cols
+    #colnames = pop_data_cols
     return X, colnames
 
 def make_test_train():
@@ -253,7 +257,11 @@ def make_test_train():
     scaler = preprocessing.StandardScaler().fit(X_train)
     X_train = scaler.transform(X_train) 
     X_test = scaler.transform(X_test)
-    return X_train, X_test, y_train, y_test, colnames
+    pd.DataFrame(X_train).to_csv(path_data+'X_train.csv')
+    pd.DataFrame(X_test).to_csv(path_data+'X_test.csv')
+    pd.DataFrame(y_train).to_csv(path_data+'y_train.csv')
+    pd.DataFrame(y_test).to_csv(path_data+'y_test.csv')
+    #return X_train, X_test, y_train, y_test, colnames
 
 ######################################
 # Load Data -- feature extraction   ##

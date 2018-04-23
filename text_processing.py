@@ -67,11 +67,11 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
                 if sum(X[:,i]) > num_appear_limit:
                     n+=1
                     feature_dic[key] = X[:,i]
-                    print (key)
-                    print (sum(X[:,i]))
+                    #rint (key)
+                    #print (sum(X[:,i]))
                     info_gain_dic[key] = information_gain_list[value]
                 if n == max_bag:
-                    print ('there are ', n, 'bag of words')
+                    #print ('there are ', n, 'bag of words')
                     return pd.DataFrame(data=feature_dic)
 
     # For wordMap

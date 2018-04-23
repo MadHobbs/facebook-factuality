@@ -39,7 +39,13 @@ def tune(X_train, y_train, scoring):
     return rf_random.best_params_, rf_random.best_score_
 
 def main():
-    X_train, X_test, y_train, y_test, colnames = util.make_test_train()
+    #X_train, X_test, y_train, y_test, colnames = util.make_test_train()
+    X_train = pd.read_csv("X_train.csv")
+    X_test = pd.read_csv("X_test.csv")
+    y_train = pd.read_csv("y_train.csv") 
+    y_test = pd.read_csv("y_test.csv")
+
+    colnames = list(X_train)
 
     fracNeg = len(y_train[y_train == 0])/float(len(y_train))
     print "fraction of data training examples which have negative response: " + str(fracNeg)
