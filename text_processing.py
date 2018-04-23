@@ -56,6 +56,9 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
     #print '---------------y------------------'
         
     print '======================================='
+
+    # For wordMap
+    info_gain_dic = {} 
     feature_dic = {}
     n = 0 
     for i in feature_index:
@@ -66,13 +69,69 @@ def impWords(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit =
                     feature_dic[key] = X[:,i]
                     print key
                     print sum(X[:,i])
+                    info_gain_dic[key] = information_gain_list[value]
                 if n == max_bag:
                     print 'there are ', n, 'bag of words'
                     return pd.DataFrame(data=feature_dic)
+
+    # For wordMap
     #print 'there are ', n, 'bag of words'
     return pd.DataFrame(data=feature_dic)
+# Due to my laziness, I made another function that returns something slightly different
+def impWords_info_dic(X,y,word_list,search_space = 300, max_bag = 200, num_appear_limit = 2):
+    '''
+    input: 
+    X ... feature vector (n,m)
+    y ... class          (n,)
+    word_list ... dictionary of words with index
+    search_space ... How many of the words in word_list you want to consider
+    max_bag      ... The maximum of the returned words list
+    num_apprea_limit ... Words have to appreat more than num_apprear_limit times in the posts
 
+    output:
+    panda datafreme with the shape (num_sampels, words) with the label of the words
+    '''
+    #print '-------------------------'
+    n_features = len(X[0])
+    n_classes  = len(np.unique(y))
+    tree = Tree(n_features,n_classes)
+    information_gain_list = np.zeros(len(X[0]))
 
+    for i in range(len(X)):
+        information_gain_list[i] = tree._information_gain(X[:,i],y)[0]
+
+    feature_index = hp.nlargest(500, range(len(information_gain_list)), information_gain_list.take)
+    print feature_index
+    print '---------------y------------------'
+
+    #print feature_index
+    #print '---------------y------------------'
+        
+    print '======================================='
+
+    # For wordMap
+    info_gain_dic = {} 
+    feature_dic = {}
+    n = 0 
+    for i in feature_index:
+        for key, value in word_list.iteritems():    # for name, age in list.items():  (for Python 3.x)
+            if value == i:
+                if sum(X[:,i]) > num_appear_limit:
+                    n+=1
+                    info_gain_dic[key] = information_gain_list[value]
+                if n == max_bag:
+                    print 'there are ', n, 'bag of words'
+                    return info_gain_dic
+    # For wordMap
+
+    #print 'there are ', n, 'bag of words'
+    return info_gain_dic
+
+def wordMap(info_gain_dic):
+    print info_gain_dic
+    for word, gain in info_gain_dic.iteritems():
+        print (word + " ") * int(gain*1000)
+    
 ######################################################################
 # MAIN #
 ######################################################################
@@ -115,22 +174,23 @@ def main():
     print clf.best_score_
     '''
 
-    clf = SVC(kernel='linear', C = 0.1)
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
+    # clf = SVC(kernel='linear', C = 0.1)
+    # clf.fit(X_train, y_train)
+    # y_pred = clf.predict(X_test)
 
-    print clf.coef_
+    # print clf.coef_
 
-    print metrics.f1_score(y_test, y_pred, average='weighted')
+    # print metrics.f1_score(y_test, y_pred, average='weighted')
 
-    print "training error"
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_train)
-    print metrics.f1_score(y_train, y_pred, average='weighted')
+    # print "training error"
+    # clf.fit(X_train, y_train)
+    # y_pred = clf.predict(X_train)
+    # print metrics.f1_score(y_train, y_pred, average='weighted')
 
-    pandaman=impWords(X,y,word_list)
-    print pandaman
-
+    # pandaman=impWords(X,y,word_list)
+    # print pandaman
+    info_gain_dic = impWords_info_dic(X,y,word_list)
+    wordMap(info_gain_dic)
     
 if __name__ == "__main__" :
    main()
