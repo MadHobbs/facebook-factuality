@@ -231,8 +231,8 @@ def make_full_X():
     feature_matrix = extract_feature_vectors(data.status_message, word_list)
     X = feature_matrix
     y = data.Rating
-    BoW = make_BoW_matrix()
-    #BoW = text_processing.impWords(X,y,word_list)
+    #BoW = make_BoW_matrix()
+    BoW = text_processing.impWords(X,y,word_list)
     colnames = list(BoW)
     pop_data = data[['num_comments', 'num_shares', \
     'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \
@@ -251,6 +251,7 @@ def make_test_train():
     return X_train, X_test, y_train, y_test'''
     y = code_truVrest()
     X, colnames = make_full_X()
+    print colnames
     np.random.seed(42)
     X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                     stratify=y, 
@@ -262,6 +263,7 @@ def make_test_train():
     pd.DataFrame(X_test).to_csv(path_data+'X_test.csv')
     pd.DataFrame(y_train).to_csv(path_data+'y_train.csv')
     pd.DataFrame(y_test).to_csv(path_data+'y_test.csv')
+    pd.DataFrame(colnames).to_csv(path_data+'colnames.csv')
     #return X_train, X_test, y_train, y_test, colnames
 
 ######################################
