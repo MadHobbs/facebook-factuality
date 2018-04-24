@@ -42,10 +42,18 @@ def tune(X_train, y_train, scoring):
 def main():
     #X_train, X_test, y_train, y_test, colnames = util.make_test_train()
     
-    X_train = np.genfromtxt('X_train.csv',delimiter=',')
-    X_test = np.genfromtxt('X_test.csv',delimiter=',')
-    y_train = np.genfromtxt('y_train.csv',delimiter=',')
-    y_test = np.genfromtxt('y_test.csv',delimiter=',')
+    X_train = pd.read_csv("X_train.csv")
+    X_train = X_train.values
+    print X_train.shape
+    X_test = pd.read_csv("X_test.csv")
+    X_test = X_test.values
+    print X_test.shape
+    y_train = pd.read_csv("y_train.csv")['0']
+    y_train = y_train.values
+    print y_train.shape
+    y_test = pd.read_csv("y_test.csv")['0']
+    y_test =  y_test.values
+    print y_test.shape
 
     colnames = list(X_train)
 
@@ -104,7 +112,7 @@ def main():
     print "test accuracy: " + str(accuracy_score(y_test, preds))
     print "confusion matrix trained with accuracy: \n" + str(confusion_matrix(y_test, preds)) #0.887
     
-    validations.check_overfit(rf_accuracy, accuracy_score)
+    #validations.check_overfit(rf_accuracy, accuracy_score)
 
     rank_idx = np.argsort(rf_f1.coef_)[0]
     print('\n Features that contribute most to Not Mostly Factual Content')

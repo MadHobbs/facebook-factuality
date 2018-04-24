@@ -7,6 +7,7 @@ Description : Random Forest Tuning and Performance
 
 import util
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import validations
 from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_precision_score, confusion_matrix
@@ -50,12 +51,21 @@ def tune(X_train, y_train, scoring):
 
 def main():
     X_train = pd.read_csv("X_train.csv")
-    X_test = pd.read_csv("X_test.csv")
-    y_train = pd.read_csv("y_train.csv") 
-    y_test = pd.read_csv("y_test.csv")
-
     colnames = list(X_train)
-    print colnames[]
+    X_train = X_train.values
+    print X_train.shape
+    X_test = pd.read_csv("X_test.csv")
+    X_test = X_test.values
+    print X_test.shape
+    y_train = pd.read_csv("y_train.csv")['0']
+    y_train = y_train.values
+    print y_train.shape
+    y_test = pd.read_csv("y_test.csv")['0']
+    y_test =  y_test.values
+    print y_test.shape
+
+    
+    print colnames[:20]
 
     fracNeg = len(y_train[y_train == 0])/float(len(y_train))
     print "fraction of data training examples which have negative response: " + str(fracNeg)
