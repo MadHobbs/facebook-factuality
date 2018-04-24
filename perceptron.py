@@ -48,10 +48,10 @@ def tune(X_train, y_train, scoring):
 
 print "Getting training and test set"
 #X_train, X_test, y_train, y_test = util.make_test_train()
-X_train = pd.read_csv("X_train.csv")
+X_train = pd.read_csv("X_train.csv").drop(['Unnamed: 0'], axis = 1)
 X_train = X_train.values
 print X_train.shape
-X_test = pd.read_csv("X_test.csv")
+X_test = pd.read_csv("X_test.csv").drop(['Unnamed: 0'], axis = 1)
 X_test = X_test.values
 print X_test.shape
 y_train = pd.read_csv("y_train.csv")['0']
