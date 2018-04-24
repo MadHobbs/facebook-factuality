@@ -17,6 +17,7 @@ from nltk.corpus import wordnet
 from nltk.stem import PorterStemmer
 #import Stemmer
 from nltk.tokenize import RegexpTokenizer, sent_tokenize, word_tokenize
+from nltk.stem.snowball import SnowballStemmer
 from nltk.corpus import stopwords
 import text_processing 
 from sklearn.model_selection import train_test_split
@@ -116,21 +117,23 @@ def extract_words(input_string) :
     tokenizer = RegexpTokenizer(pattern = "\w+")
     input_string = input_string.lower()
     words = tokenizer.tokenize(input_string)
-    #stemmer = Stemmer.Stemmer('english')
-    stemmer = PorterStemmer() 
+    stemmer = SnowballStemmer("english")
+    #stemmer = PorterStemmer() 
     #wnl = WordNetLemmatizer()
 
     filtered_words = [w for w in words if not w in stop_words]
     filtered_words = []
 
-    filtered_words = [stemmer.stem(word) for word in words]
+    #filtered_words = [stemmer.stem(word) for word in words]
 
     list_of_crap = ['utf8', 'http', 'ws', 'abcn', 'www', 'com', '2d5ogyb', '2cndgea', 'ly', '2cygp9w', '2d6hx9w', 'de', 'lz', '2ccpesl', '00', 'et', '2cyazvp', '2ck2xe1', '2d2iuqb']
  
     for w in words:
         if w not in stop_words and len(w) > 1 and w not in list_of_crap:
-            filtered_words = filtered_words + [w] 
+            filtered_words = filtered_words + [stemmer.stem(w)] 
 
+    filtered_words = np.unique(filtered_words)
+    filtered_words = filtered_words.tolist()
     #filtered_words = stemmer.stemWords(filtered_words)
     return filtered_words
 
