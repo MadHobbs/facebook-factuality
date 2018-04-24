@@ -67,11 +67,11 @@ def main():
     class_weight = {1:1, 0:weight}
 
     # 5 fold cv
-    best_params, best_score = tune(X_train, y_train, 'f1_weighted')
-    print best_params
-    print best_score
-    # C = 1000 for linear
-    rf_f1 = SVC(class_weight=class_weight, kernel="linear", C = 1000)
+    #best_params, best_score = tune(X_train, y_train, 'f1_weighted')
+    #print best_params
+    #print best_score
+    # {'kernel': 'linear', 'C': 0.1} CV f1:  0.822048177675
+    rf_f1 = SVC(class_weight=class_weight, kernel="linear", C = 0.1)
     rf_f1.fit(X_train, y_train)
     preds = rf_f1.predict(X_train)
     print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.9958
