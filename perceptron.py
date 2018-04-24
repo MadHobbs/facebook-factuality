@@ -141,6 +141,7 @@ print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, pred
 # [[ 53   5]
 #  [ 68 250]]
 
+# PLOTS
 
 print('\n Words contribute most to Not Mostly Factual Content')
 rank_idx = np.argsort(perceptron_f1.coef_)[0]
@@ -150,13 +151,14 @@ for i in range(20):
     idx = rank_idx[i]
     feats_no += [colnames[idx]]
     coef_no += [perceptron_f1.coef_[0][idx]]
-
+feats_no = feats_no[::-1]
+coef_no = coef_no[::-1]
 r = range(len(feats_no))
 plt.barh(r, coef_no, color = "red")
 plt.yticks(r, feats_no, rotation = 30)
 plt.ylabel("Feature")
 plt.xlabel("Coefficient Values")
-plt.title("Perceptron Most Important Feature that Contributes to False Content")
+plt.title("Perceptron 20 Most Important Feature that Contributes to False Content")
 plt.show()
 
 
@@ -170,13 +172,14 @@ for i in range(20):
     idx = rank_idx[i]
     feats_tru += [colnames[idx]]
     coef_tru += [perceptron_f1.coef_[0][idx]]
-
+feats_tru = feats_tru[::-1]
+coef_tru = coef_tru[::-1]
 r = range(len(feats_tru))
 plt.barh(r, coef_tru, color = "blue")
 plt.yticks(r, feats_tru, rotation = 30)
 plt.ylabel("Feature")
 plt.xlabel("Coefficient Values")
-plt.title("Perceptron Most Important Feature that Contributes to True Content")
+plt.title("Perceptron 20 Most Important Feature that Contributes to True Content")
 plt.show()
 
 
