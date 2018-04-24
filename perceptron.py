@@ -48,10 +48,12 @@ def tune(X_train, y_train, scoring):
 
 print "Getting training and test set"
 #X_train, X_test, y_train, y_test = util.make_test_train()
-X_train = pd.read_csv("X_train.csv")
+X_train = pd.read_csv("X_train.csv").drop(['Unnamed: 0'], axis = 1)
+print X_train.columns
 X_train = X_train.values
 print X_train.shape
-X_test = pd.read_csv("X_test.csv")
+X_test = pd.read_csv("X_test.csv").drop(['Unnamed: 0'], axis = 1)
+print X_test.columns
 X_test = X_test.values
 print X_test.shape
 y_train = pd.read_csv("y_train.csv")['0']
@@ -84,9 +86,10 @@ class_weight = {1:1, 0:weight}
 
 
 #print tune(X_train, y_train, 'f1_weighted')
-# #3 fold best for f1_weighted is {'penalty': None, 'alpha': 10.0, 'max_iter': 2000} Stemming
+# #3 fold best for f1_weighted is {'penalty': None, 'alpha': 10.0, 'max_iter': 2000} 
+# #{'penalty': None, 'alpha': 0.1, 'max_iter': 800}
 
-perceptron_f1 = Perceptron(penalty='None',alpha=10.0,max_iter=2000,class_weight=class_weight,random_state=42)
+perceptron_f1 = Perceptron(penalty='None',alpha=0.1,max_iter=800,class_weight=class_weight,random_state=42)
 
 perceptron_f1.fit(X_train, y_train)
 preds = perceptron_f1.predict(X_train)
@@ -100,6 +103,43 @@ print "test accuracy_score: " + str(accuracy_score(y_test, preds))
 print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, preds))
  # [[ 21   8]
  #  [ 35 140]]
+
+#With eta0=default
+# negative weight is: 5.46982758621
+# train f1_score: 0.856392547554
+# train accuracy_score: 0.859427048634
+# test f1_score: 0.803697130505
+# test accuracy_score: 0.773936170213
+# confusion matrix trained with f1: 
+# [[ 55   3]
+#  [ 82 236]]
+
+#With eta0=0.0001
+# train f1_score: 0.856392547554
+# train accuracy_score: 0.859427048634
+# test f1_score: 0.803697130505
+# test accuracy_score: 0.773936170213
+# confusion matrix trained with f1: 
+# [[ 55   3]
+#  [ 82 236]]
+
+#Fixed Colnames
+# train f1_score: 0.866274804865
+# train accuracy_score: 0.851432378414
+# test f1_score: 0.836078608405
+# test accuracy_score: 0.816489361702
+# confusion matrix trained with f1: 
+# [[ 48  10]
+#  [ 59 259]]
+
+#Retuned
+# train f1_score: 0.85776595971
+# train accuracy_score: 0.839440373085
+# test f1_score: 0.829343829016
+# test accuracy_score: 0.80585106383
+# confusion matrix trained with f1: 
+# [[ 53   5]
+#  [ 68 250]]
 
 
 print('\n Words contribute most to Not Mostly Factual Content')
@@ -116,7 +156,7 @@ plt.barh(r, coef_no, color = "red")
 plt.yticks(r, feats_no, rotation = 30)
 plt.ylabel("Feature")
 plt.xlabel("Coefficient Values")
-plt.title("Perceptron Least Important Feature")
+plt.title("Perceptron Most Important Feature that Contributes to False Content")
 plt.show()
 
 
@@ -136,7 +176,7 @@ plt.barh(r, coef_tru, color = "blue")
 plt.yticks(r, feats_tru, rotation = 30)
 plt.ylabel("Feature")
 plt.xlabel("Coefficient Values")
-plt.title("Perceptron Most Important Feature")
+plt.title("Perceptron Most Important Feature that Contributes to True Content")
 plt.show()
 
 
