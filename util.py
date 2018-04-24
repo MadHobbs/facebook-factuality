@@ -15,7 +15,7 @@ from sklearn import metrics, preprocessing
 from sklearn.model_selection import KFold
 from nltk.corpus import wordnet
 from nltk.stem import PorterStemmer
-import Stemmer
+#import Stemmer
 from nltk.tokenize import RegexpTokenizer, sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
 import text_processing 

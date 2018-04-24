@@ -12,6 +12,8 @@ from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_preci
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.linear_model import Perceptron
 
+import pandas as pd
+
 
 
 def tune(X_train, y_train, scoring):
@@ -82,10 +84,10 @@ class_weight = {1:1, 0:weight}
 
 
 
-#print tune(X_train, y_train, 'f1_weighted')
-# 3 fold best for f1_weighted is {'penalty': 'l1', 'alpha': 0.001, 'max_iter': 1000}
+# #print tune(X_train, y_train, 'f1_weighted')
+# 3 fold best for f1_weighted is {'penalty': None, 'alpha': 0.01, 'max_iter': 1200}
 
-perceptron_f1 = Perceptron(penalty='l1',alpha=0.001,max_iter=1000,class_weight=class_weight,random_state=42)
+perceptron_f1 = Perceptron(penalty='None',alpha=0.001,max_iter=1000,class_weight=class_weight,random_state=42)
 perceptron_f1.fit(X_train, y_train)
 preds = perceptron_f1.predict(X_train)
 print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.86483
@@ -95,20 +97,66 @@ print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, pred
  # [[ 21   8]
  #  [ 35 140]]
 
+feats = ["Category_mainstream", "num_shares", "Category_right", "num_wows", "num_likes", "num_reactions", \
+"num_comments", "num_angrys", "num_hahas", "num_sads", "num_loves", "donald", \
+"trump", "Category_left", "clinton", "president", "debate", "says", "video", \
+"republican", "said", "america", "george", "americans", "racist"]
+
+imps = [0.135356, 0.099026, 0.098160, 0.066903, 0.064147, 0.061870, 0.061593, 0.050732, \
+0.047292, 0.045151, 0.044853, 0.019866, \
+0.015771, 0.013685, 0.008299, 0.005285, 0.004969, 0.004541, 0.004141, 0.004071, \
+0.003881, 0.003496, 0.003278, 0.003093, 0.003005]
+
+
+rank_idx = np.argsort(svm_linear_clf_truVrest.coef_)[0]
+feats
+print('\n Words contribute most to Not Mostly Factual Content')
+for key in word_list.keys():
+    for idx in rank_idx[:50]:
+        if word_list[key] == idx:
+            print key
+
+r = range(len(feats))
+plt.bar(r, imps, color = "blue")
+plt.xticks(r, feats, rotation = 70)
+plt.xlabel("Feature")
+plt.ylabel("Importance")
+plt.title("Random Forests Feature Importance")
+
+
+
+rank_idx = rank_idx[::-1]
+print rank_idx
+
+print('\n Words contribute most to Mostly Factual Content')
+for key in word_list.keys():
+    for idx in rank_idx[:50]:
+        if word_list[key] == idx:
+            print key
+
+rank_idx = rank_idx[::-1]
+print rank_idx
+
+r = range(len(feats))
+plt.bar(r, imps, color = "blue")
+plt.xticks(r, feats, rotation = 70)
+plt.xlabel("Feature")
+plt.ylabel("Importance")
+plt.title("Random Forests Feature Importance")
 
 
 #print tune(X_train, y_train, 'accuracy')
 # 3 fold best for accuracy is {'penalty': 'l2', 'alpha': 1000.0, 'max_iter': 1600}
 
-perceptron_accuracy = Perceptron(penalty='l2',alpha=1000.0,max_iter=1600,class_weight=class_weight,random_state=42)
-perceptron_accuracy.fit(X_train, y_train)
-preds = perceptron_accuracy.predict(X_train)
-print "train accuracy_score: " + str(accuracy_score(y_train, preds)) # 0.32038
-preds = perceptron_accuracy.predict(X_test)
-print "test accuracy_score: " + str(accuracy_score(y_test, preds)) # 0.3186
-print "confusion matrix trained with accuracy: \n" + str(confusion_matrix(y_test, preds))
-# [[ 28   1]
-#  [138  37]]
+# perceptron_accuracy = Perceptron(penalty='l2',alpha=1000.0,max_iter=1600,class_weight=class_weight,random_state=42)
+# perceptron_accuracy.fit(X_train, y_train)
+# preds = perceptron_accuracy.predict(X_train)
+# print "train accuracy_score: " + str(accuracy_score(y_train, preds)) # 0.32038
+# preds = perceptron_accuracy.predict(X_test)
+# print "test accuracy_score: " + str(accuracy_score(y_test, preds)) # 0.3186
+# print "confusion matrix trained with accuracy: \n" + str(confusion_matrix(y_test, preds))
+# # [[ 28   1]
+# #  [138  37]]
 
 
 
