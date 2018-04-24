@@ -237,7 +237,7 @@ def make_full_X():
     #BoW = make_BoW_matrix()
     BoW = text_processing.impWords(X,y,word_list)
     colnames = list(BoW)
-    pop_data = data[['num_comments', 'num_shares', \
+    pop_data = data[['num_reactions', 'num_comments', 'num_shares', \
     'num_likes', 'num_loves', 'num_wows', 'num_hahas', 'num_sads', \
     'num_angrys', 'Category_left', 'Category_mainstream', 'Category_right']]
     pop_data_cols = ['num_reactions', 'num_comments', 'num_shares', \

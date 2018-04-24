@@ -11,13 +11,13 @@ clf = DummyClassifier(strategy = "most_frequent")
 clf.fit(X_train, y_train)
 
 preds = clf.predict(X_train)
-print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) # 0.9958
+print "train f1_score: " + str(f1_score(y_train, preds, average="weighted")) 
 preds = clf.predict(X_test)
-print "test f1_score: " + str(f1_score(y_test, preds, average="weighted")) # 0.88877
+print "test f1_score: " + str(f1_score(y_test, preds, average="weighted")) 
 print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, preds))
 
 preds = clf.predict(X_train)
-print "train accuracy: " + str(accuracy_score(y_train, preds)) # 1.0
+print "train accuracy: " + str(accuracy_score(y_train, preds))
 preds = clf.predict(X_test)
 print "test accuracy: " + str(accuracy_score(y_test, preds))
-print "confusion matrix trained with accuracy: \n" + str(confusion_matrix(y_test, preds)) #0.887
+print "confusion matrix trained with accuracy: \n" + str(confusion_matrix(y_test, preds)) 

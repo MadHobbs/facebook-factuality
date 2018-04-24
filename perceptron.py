@@ -104,44 +104,10 @@ print "confusion matrix trained with f1: \n" + str(confusion_matrix(y_test, pred
  # [[ 21   8]
  #  [ 35 140]]
 
-#With eta0=default
-# negative weight is: 5.46982758621
-# train f1_score: 0.856392547554
-# train accuracy_score: 0.859427048634
-# test f1_score: 0.803697130505
-# test accuracy_score: 0.773936170213
-# confusion matrix trained with f1: 
-# [[ 55   3]
-#  [ 82 236]]
 
-#With eta0=0.0001
-# train f1_score: 0.856392547554
-# train accuracy_score: 0.859427048634
-# test f1_score: 0.803697130505
-# test accuracy_score: 0.773936170213
-# confusion matrix trained with f1: 
-# [[ 55   3]
-#  [ 82 236]]
-
-#Fixed Colnames
-# train f1_score: 0.866274804865
-# train accuracy_score: 0.851432378414
-# test f1_score: 0.836078608405
-# test accuracy_score: 0.816489361702
-# confusion matrix trained with f1: 
-# [[ 48  10]
-#  [ 59 259]]
-
-#Retuned
-# train f1_score: 0.85776595971
-# train accuracy_score: 0.839440373085
-# test f1_score: 0.829343829016
-# test accuracy_score: 0.80585106383
-# confusion matrix trained with f1: 
-# [[ 53   5]
-#  [ 68 250]]
-
-# PLOTS
+########################
+######## PLOTS ###########
+########################
 
 print('\n Words contribute most to Not Mostly Factual Content')
 rank_idx = np.argsort(perceptron_f1.coef_)[0]
