@@ -249,25 +249,35 @@ def make_full_X():
     #colnames = pop_data_cols
     return X, colnames
 
+# def make_test_train():
+#     '''make test and train while preprocessing to normalize
+#     return X_train, X_test, y_train, y_test'''
+#     y = code_truVrest()
+#     X, colnames = make_full_X()
+#     np.random.seed(42)
+#     X_train, X_test, y_train, y_test = train_test_split(X, y,
+#                                                     stratify=y, 
+#                                                     test_size=0.20)
+#     scaler = preprocessing.StandardScaler().fit(X_train)
+#     X_train = scaler.transform(X_train) 
+#     X_test = scaler.transform(X_test)
+#     pd.DataFrame(X_train).to_csv(path_data+'X_train.csv')
+#     pd.DataFrame(X_test).to_csv(path_data+'X_test.csv')
+#     pd.DataFrame(y_train).to_csv(path_data+'y_train.csv')
+#     pd.DataFrame(y_test).to_csv(path_data+'y_test.csv')
+#     #return X_train, X_test, y_train, y_test, colnames
+
 def make_test_train():
-    '''make test and train while preprocessing to normalize
-    return X_train, X_test, y_train, y_test'''
-    y = code_truVrest()
-    X, colnames = make_full_X()
-    print colnames
-    np.random.seed(42)
-    X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                    stratify=y, 
-                                                    test_size=0.20)
-    scaler = preprocessing.StandardScaler().fit(X_train)
-    X_train = scaler.transform(X_train) 
-    X_test = scaler.transform(X_test)
-    pd.DataFrame(X_train).to_csv(path_data+'X_train.csv')
-    pd.DataFrame(X_test).to_csv(path_data+'X_test.csv')
-    pd.DataFrame(y_train).to_csv(path_data+'y_train.csv')
-    pd.DataFrame(y_test).to_csv(path_data+'y_test.csv')
-    pd.DataFrame(colnames).to_csv(path_data+'colnames.csv')
-    #return X_train, X_test, y_train, y_test, colnames
+    X_train = pd.read_csv("X_train.csv")
+    colnames = list(X_train)
+    X_train = X_train.values
+    X_test = pd.read_csv("X_test.csv")
+    X_test = X_test.values
+    y_train = pd.read_csv("y_train.csv")['0']
+    y_train = y_train.values
+    y_test = pd.read_csv("y_test.csv")['0']
+    y_test =  y_test.values
+    return X_train, X_test,y_train,y_test
 
 ######################################
 # Load Data -- feature extraction   ##
