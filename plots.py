@@ -4,26 +4,29 @@ import matplotlib.pyplot as plt
 from matplotlib import rc
 
 data = pd.read_csv('clear.csv')
-'''
-feats = ["Category_mainstream", "num_shares", "Category_right", "num_wows", "num_likes", "num_reactions", \
-"num_comments", "num_angrys", "num_hahas", "num_sads", "num_loves", "donald", \
-"trump", "Category_left", "clinton", "president", "debate", "says", "video", \
-"republican", "said", "america", "george", "americans", "racist"]
 
-imps = [0.135356, 0.099026, 0.098160, 0.066903, 0.064147, 0.061870, 0.061593, 0.050732, \
-0.047292, 0.045151, 0.044853, 0.019866, \
-0.015771, 0.013685, 0.008299, 0.005285, 0.004969, 0.004541, 0.004141, 0.004071, \
-0.003881, 0.003496, 0.003278, 0.003093, 0.003005]
+feats = ["Category_mainstream", "num_shares", "Category_right", "num_likes", "num_wows", \
+"num_comments", "num_angrys", "num_hahas", "num_sads", "num_loves", "donald", \
+"Category_left", "trump", "clinton", "say", "debat", "republican", "get", "american",
+"said"]
+
+feats = feats[::-1]
+
+imps = [0.129977, 0.110422, 0.095971, 0.068438, 0.067139, 0.060341, 0.056262, 0.051544, \
+0.050399, 0.048500, 0.024293, 0.015260, 0.014862, 0.008266, 0.007401, 0.007360, 0.004407, \
+0.004311, 0.004199, 0.004040]
+
+imps = imps[::-1]
 
 r = range(len(feats))
-plt.bar(r, imps, color = "blue")
-plt.xticks(r, feats, rotation = 70)
-plt.xlabel("Feature")
-plt.ylabel("Importance")
+plt.barh(r, imps, color = "blue")
+plt.yticks(r, feats, rotation = 30)
+plt.ylabel("Feature")    
+plt.xlabel("Feature Importance")
 plt.title("Random Forests Feature Importance")
-# Show graphic
 plt.show()
 
+'''
 # likes
 print "likes"
 #print data.groupby(['Rating'])['num_likes'].sum()
@@ -195,9 +198,11 @@ ax1.set_xlabel("")
 plt.legend(loc='upper left')
 '''
 # f1 
-baseline = 0.846
-names = ["RF Meta Only", "Random Forest", "Linear SVC", "Perceptron"]
-values = np.array([0.872, 0.868, 0.853, 0.842])
+baseline = 0.775 
+names = [ "Random Forest", "Linear SVC", "Perceptron"]
+#names = ["RF Meta Only", "Random Forest", "Linear SVC", "Perceptron"]
+values = [0.871, 0.827, 0.829]
+#values = np.array([0.873, 0.871, 0.827, 0.829])
 x = range(len(values))
 
 # split it up
@@ -213,7 +218,8 @@ ax.bar(x, values, color="g")
 plt.xticks(x, names, rotation = 70)
 
 # horizontal line indicating the threshold
-ax.plot([0., 4.5], [baseline, baseline], "k--", label = "Majority Vote")
+x = range(-1, 5)
+ax.plot(x, [baseline, baseline, baseline, baseline, baseline, baseline], "k--", label = "Majority Vote")
 plt.title("Held-out F1 Score Across Different Models")
 plt.ylabel("F1 Score")
 plt.xlabel("Classifier")
