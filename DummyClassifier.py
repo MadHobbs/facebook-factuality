@@ -6,7 +6,7 @@ from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_preci
 from sklearn.dummy import DummyClassifier
 
 
-X_train, X_test, y_train, y_test, colnames = util.make_test_train()
+X_train, X_test, y_train, y_test = util.make_test_train()
 clf = DummyClassifier(strategy = "most_frequent")
 clf.fit(X_train, y_train)
 
