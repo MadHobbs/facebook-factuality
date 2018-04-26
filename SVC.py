@@ -124,4 +124,47 @@ def main():
     for idx in rank_idx[:50]:
         print colnames[idx]
 
+    ########################
+    ######## PLOTS ###########
+    ########################
+
+    print('\n Words contribute most to Not Mostly Factual Content')
+    rank_idx = np.argsort(rf_f1.coef_)[0]
+    feats_no = []
+    coef_no = []
+    for i in range(20):
+        idx = rank_idx[i]
+        feats_no += [colnames[idx]]
+        coef_no += [rf_f1.coef_[0][idx]]
+    feats_no = feats_no[::-1]
+    coef_no = coef_no[::-1]
+    r = range(len(feats_no))
+    plt.barh(r, coef_no, color = "red")
+    plt.yticks(r, feats_no, rotation = 30)
+    plt.ylabel("Feature")
+    plt.xlabel("Coefficient Values")
+    plt.title("SVC 20 Most Important Features Contributing to False Content")
+    plt.show()
+
+
+    rank_idx = rank_idx[::-1]
+
+
+    print('\n Words contribute most to Mostly Factual Content')
+    feats_tru = []
+    coef_tru = []
+    for i in range(20):
+        idx = rank_idx[i]
+        feats_tru += [colnames[idx]]
+        coef_tru += [rf_f1.coef_[0][idx]]
+    feats_tru = feats_tru[::-1]
+    coef_tru = coef_tru[::-1]
+    r = range(len(feats_tru))
+    plt.barh(r, coef_tru, color = "blue")
+    plt.yticks(r, feats_tru, rotation = 30)
+    plt.ylabel("Feature")
+    plt.xlabel("Coefficient Values")
+    plt.title("SVC 20 Most Important Features Contributing to Mostly True Content")
+    plt.show()
+
     
