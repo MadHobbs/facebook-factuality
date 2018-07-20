@@ -42,13 +42,12 @@ def cv_performance(clf, train_data, kfs):
     n_folds = kfs[0].n_splits
     scores = np.zeros((n_trials, n_folds))
     
-    ### ========== TODO : START ========== ###
-    # part b: run multiple trials of CV
+    # run multiple trials of CV
     for k in range(n_trials):
         kf = kfs[k]
         scores[k] =cv_performance_one_trial(clf,train_data,kf)
     
-    ### ========== TODO : END ========== ###
+
     
     return scores
 
@@ -71,8 +70,7 @@ def cv_performance_one_trial(clf, train_data, kf) :
     
     scores = np.zeros(kf.n_splits)
     
-    ### ========== TODO : START ========== ###
-    # part b: run one trial of CV
+    # run one trial of CV
     n_folds = kf.n_splits
     i = 0
     for train_index,test_index in kf.split(train_data.X):
@@ -81,7 +79,7 @@ def cv_performance_one_trial(clf, train_data, kf) :
         scores[i] = metrics.accuracy_score(prediction, train_data.y[test_index], normalize = True)
         i += 1
 
-    ### ========== TODO : END ========== ###
+
     
     return scores
 
@@ -96,9 +94,8 @@ def main() :
     #========================================
     # load data
     train_data = load_data("phoneme_train.csv")
-    
-    ### ========== TODO : START ========== ###
-    # part a: is data linearly separable?
+
+    # is data linearly separable?
     X = train_data.X
     y = train_data.y
 
@@ -108,10 +105,7 @@ def main() :
     train_error = 1 - metrics.accuracy_score(y, y_pred, normalize=True)
     print 'train_error %f' %train_error
 
-    ### ========== TODO : END ========== ###
-        
-    ### ========== TODO : START ========== ###
-    # part c-d: compare classifiers
+    #compare classifiers
     # make sure to use same folds across all runs
     def calc_std(scores):
         """Calculate standard deviation for each kFold arross all the values
@@ -166,14 +160,8 @@ def main() :
                 print name[clf1],'vs',name[clf2], '=', stats.ttest_rel(score_list[clf1].flatten(),score_list[clf2].flatten())
 
 
-
-
     
-    
-    ### ========== TODO : END ========== ###
-    
-    ### ========== TODO : START ========== ###
-    # part e: plot
+    #plot
     ########################
     ### Plotting errors  ###
     ########################
@@ -222,7 +210,7 @@ def main() :
     autolabel(rects1)
     autolabel(rects2)
     plt.show()
-    ### ========== TODO : END ========== ###
+
 
 if __name__ == "__main__" :
     main()

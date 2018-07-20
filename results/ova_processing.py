@@ -3,7 +3,7 @@ ova_processing.py
 Author      : Shota Yasunaga, Madison Hobbs, Justin Lauw
 Class       : HMC CS 158
 Date        : 2018 April 4
-Description : Script that test binary classification of
+Description : Script that tests binary classification of
 				- Non-factual VS. the rest
 				- Mostly True VS. the rest
 			  using Bag of Words Features
