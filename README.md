@@ -1,42 +1,17 @@
 # ML_Project
 
-# requirement: 
+# Dependencies 
 - python2.x (I ran on 2.7)
-- packages:  urllib2 ,json,datetime,csv, time,pandas
+- packages:  NLTK, pandas, tensorflow, sklearn, numpy, urllib2, json, datetime, csv, time
 
-# Files
-- facebook-fact-check.csv
-  original dataset
-- facebook_statuses.csv
-  Scraped information about status.
-- posts.py
-  This code is to scrape information about the post and creat a csv file
-- validations.py
-  Code for validating the classifier. ()
-- ova_processing.py
-  Code for classification of One label vs the rest using svc
-- bag_of_words.py
-  Code for creating bag of words. 
-- util.py
-  - Reading csv files
-  - everything related to data aquisitino (format etc)
+# Orientation
+- data+wrangling/
+  Code to scrape Facebook API and data acquired thusly along with NLTK wrangling of data and train/test splitting.
+- models/
+  All of the models we tried along with cross-validation, performance metrics, confusion matrices, and feature importances.
+- results/
+  The presentation we made to our Machine Learning class at Harvey Mudd College and the project directives from our professor, Dr. Yi-Chieh Wu.
 
 # References
-- Facebook Graph API (Post)
-  https://developers.facebook.com/docs/graph-api/reference/v2.12/post
-
-# TODO
-- Try high variance/high bias models.
-    - 
-- Know about the dataset balance well. 
-- User Stratified 
-- Frorcus on one message
-- One redommendation -> NLTK can do the natural language processing
-- Use more common feature extractoin -> surpsing words (words that don't show up in other sets)
-- Don't use all of the bags. You could calculate the entropy and use the highest 200 entrpies
-- Stay away from other kinds of prediction
-- Show confusion matrix 
-- Use Normalization 
-- Take a look at the rubic
-- Amount of the insight you get from the model is important
-    - look at the coefficents/ error analysis
+- [Facebook Graph API Reference](https://developers.facebook.com/docs/graph-api/reference/v2.12/post)
+- [Kaggle Competition](https://www.kaggle.com/mrisdal/fact-checking-facebook-politics-pages/home), where we sourced the original post urls (without text data) 
