@@ -10,9 +10,11 @@
   Code to scrape Facebook API and data acquired thusly along with NLTK wrangling of data and train/test splitting.
   
 - `models`
+
   All of the models we tried along with cross-validation, performance metrics, confusion matrices, and feature importances.
   
 - `results`
+
   The presentation we made to our Machine Learning class at Harvey Mudd College and the project directives from our professor, Dr. Yi-Chieh Wu.
 
 # References
