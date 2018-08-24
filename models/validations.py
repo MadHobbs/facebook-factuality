@@ -10,6 +10,8 @@ from sklearn.utils import shuffle
 from sklearn import metrics, preprocessing
 from sklearn.dummy import DummyClassifier
 # ours
+import sys
+sys.path.insert(0, '../data+wrangling')
 import util
 
 ####################

@@ -5,16 +5,17 @@ Date        : 2018 April 18
 Description : Perceptron Tuning and Performance
 """
 
-import util
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_precision_score, confusion_matrix
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.linear_model import Perceptron
-
 import pandas as pd
 
-
+# modify path because these files are in a different directory
+import sys
+sys.path.insert(0, '../data+wrangling')
+import util
 
 def tune(X_train, y_train, scoring):
 

@@ -6,14 +6,15 @@ Description : Multiclass Classification on Soybean Dataset
               This code was adapted from course material by Tommi Jaakola (MIT)
 """
 
-# utilities
-from util import *
-
 # scikit-learn libraries
 from sklearn.svm import SVC
 from sklearn import metrics
 
-# deleted load code. Maybe bring it back?
+# utilities
+# modify path because these files are in a different directory
+import sys
+sys.path.insert(0, '../data+wrangling')
+from util import *
 
 ######################################################################
 # output code functions

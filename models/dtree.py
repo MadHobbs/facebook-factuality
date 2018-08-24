@@ -10,15 +10,19 @@ Date        : 2018 Aug 11
 Description : Decision Tree Classifier
 """
 
-# Use only the provided packages!
+# packages
 import collections
-from util import *
 
 # numpy libraries
 import numpy as np
 
 # scikit-learn libraries
 from sklearn import tree
+
+# our files
+import sys # modify path because these files are in a different directory
+sys.path.insert(0, '../data+wrangling')
+from util import *
 
 ######################################################################
 # classes

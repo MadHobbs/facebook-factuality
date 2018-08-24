@@ -9,10 +9,13 @@ Project: https://github.com/aymericdamien/TensorFlow-Examples/
 
 # Import MNIST data
 import tensorflow as tf
+# modify path because these files are in a different directory
+import sys
+sys.path.insert(0, '../data+wrangling')
 from util import make_test_train 
 
 
-X_train, X_test, y_train, y_test, colnames = make_test_train()
+X_train, X_test, y_train, y_test = make_test_train()
 
 # Parameters
 learning_rate = 0.001

@@ -2,6 +2,9 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import f1_score, confusion_matrix
 import numpy as np
+# modify path because these files are in a different directory
+import sys
+sys.path.insert(0, '../data+wrangling')
 from util import make_test_train
 
 

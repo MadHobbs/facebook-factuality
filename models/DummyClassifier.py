@@ -1,10 +1,12 @@
-import util
 import numpy as np
 import matplotlib.pyplot as plt
 import validations
 from sklearn.metrics import f1_score, make_scorer, accuracy_score, average_precision_score, confusion_matrix
 from sklearn.dummy import DummyClassifier
-
+# modify path because these files are in a different directory
+import sys
+sys.path.insert(0, '../data+wrangling')
+import util
 
 X_train, X_test, y_train, y_test = util.make_test_train()
 clf = DummyClassifier(strategy = "most_frequent")
