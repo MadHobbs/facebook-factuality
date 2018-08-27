@@ -4,9 +4,9 @@ Build a model to predict the factuality of Facebook news posts from the 2016 Pre
 
 # What We Did
 
-note: It might be helpful to walk through `results/Predicting Factuality of Facebook Posts.pdf` (our presentation) as you read this because it contains useful vizualisations.
+NOTE: It might be helpful to walk through `results/Predicting Factuality of Facebook Posts.pdf` (our presentation) as you read this because it contains useful vizualisations.
 
-We built off of a dataset from Kaggle which was sourced from Buzzfeed. It contained the URLs of Facebook news posts from the 2016 Presidential Election which were rated by a team of BuzzFeed folks on the following scale: Mostly True, Mixture of True and False, Mostly False, and No Factual Content. We challenged ourselves to build a multiclass model to predict the factuality of these Facebook news posts and interpret the feature importances to understand which words were most predictive of each factuality class. 
+We built off of a dataset from Kaggle which was sourced from Buzzfeed. It contained the URLs of Facebook news posts from the 2016 Presidential Election which were rated by a team of BuzzFeed folks on the following scale: Mostly True, Mixture of True and False, Mostly False, and No Factual Content. We challenged ourselves to build a model to predict the factuality of these Facebook news posts and interpret the feature importances to understand which words were most predictive of each factuality class. After trying some multioutput models and getting poor performance, we decided to opt for a binary prediction problem, predicting "mostly factual" content ("Mostly True" posts) versus "not mostly factual" content ("Mixture of True and False" and "Mosty False" posts). Notice that we excluded "No Factual Content" posts because these posts mainly contained opinion pieces and we wanted to rate posts on a scale of factual to not. It didn't make sense to include posts which weren't even trying to masquerade as fact. 
 
 However, the dataset from Kaggle did not contain the actual text from the news posts. To meet our goal of understanding how certain words were related to the factuality of posts, we were faced with a data joining challenge. We had to scrape Facebook for the content of posts for which we already had the URLs, and merge these with the URLs and metadata we already had from Kaggle.
 
@@ -16,9 +16,7 @@ Before we could model, we had to convert text into usable features. To do this, 
 
 Because we had imbalanced classes, we decided to weight examples using class weights in the training step. This downweights examples from the more prevalent class and upweights examples from the less prevalent class to mimic a more balanced class scenario. This approach has been shown to make a big difference in terms of model performance, and it certainly did in our case. We also normalized features so that distance metrics when using an SVC, KNN, and Perceptron would work the same across features. 
 
-We tried a series of models and noticed that higher bias models outperformed higher variance models. When analysing feature importance, we saw that posts coming from "mainstream news" (as classified by Buzzfeed) and posts using less emotionally-charged words like "fact," "interview," "fbi," "syrian," "florida," "military," and so forth we predictive of "mostly true" content. On the other hand,  
-
-
+We cross-validataed a series of models and compared results. Across the board, when analysing feature importance, we saw that posts coming from "mainstream news" (as classified by Buzzfeed) and posts using less emotionally-charged words like "fact," "interview," "fbi," "syrian," "florida," "military," and so forth we predictive of "mostly factual" content. On the other hand, post popularity like number of reactions or shares and emotionally-charged words like "lies," "least," "bad", "hell," and race-based words like "Black" were all indicative of "not mostly factual" content. 
 
 # Dependencies 
 - python2.x (I ran on 2.7)
